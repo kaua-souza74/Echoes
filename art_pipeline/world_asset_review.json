@@ -1,0 +1,158 @@
+[
+  {
+    "path": "flutter_app/assets/images/tilesets/stage_02_ruins_tiles.png",
+    "width": 256,
+    "height": 160,
+    "alpha": [
+      255,
+      255
+    ]
+  },
+  {
+    "path": "flutter_app/assets/images/tilesets/stage_03_ruins_tiles.png",
+    "width": 256,
+    "height": 160,
+    "alpha": [
+      255,
+      255
+    ]
+  },
+  {
+    "path": "flutter_app/assets/images/parallax/stage_02/01_petroil_void.png",
+    "width": 640,
+    "height": 360,
+    "alpha": [
+      255,
+      255
+    ]
+  },
+  {
+    "path": "flutter_app/assets/images/parallax/stage_02/02_suspended_galleries.png",
+    "width": 640,
+    "height": 360,
+    "alpha": [
+      0,
+      245
+    ]
+  },
+  {
+    "path": "flutter_app/assets/images/parallax/stage_02/03_chains_and_windbreaks.png",
+    "width": 640,
+    "height": 360,
+    "alpha": [
+      0,
+      245
+    ]
+  },
+  {
+    "path": "flutter_app/assets/images/parallax/stage_02/04_wind_haze.png",
+    "width": 640,
+    "height": 360,
+    "alpha": [
+      0,
+      16
+    ]
+  },
+  {
+    "path": "flutter_app/assets/images/parallax/stage_02/stage_02_visual_study.png",
+    "width": 640,
+    "height": 360,
+    "alpha": [
+      255,
+      255
+    ]
+  },
+  {
+    "path": "flutter_app/assets/images/parallax/stage_03/01_indigo_aperture.png",
+    "width": 640,
+    "height": 360,
+    "alpha": [
+      255,
+      255
+    ]
+  },
+  {
+    "path": "flutter_app/assets/images/parallax/stage_03/02_echo_tower.png",
+    "width": 640,
+    "height": 360,
+    "alpha": [
+      0,
+      255
+    ]
+  },
+  {
+    "path": "flutter_app/assets/images/parallax/stage_03/03_shattered_lancets.png",
+    "width": 640,
+    "height": 360,
+    "alpha": [
+      0,
+      190
+    ]
+  },
+  {
+    "path": "flutter_app/assets/images/parallax/stage_03/04_silver_mist.png",
+    "width": 640,
+    "height": 360,
+    "alpha": [
+      0,
+      16
+    ]
+  },
+  {
+    "path": "flutter_app/assets/images/parallax/stage_03/stage_03_visual_study.png",
+    "width": 640,
+    "height": 360,
+    "alpha": [
+      255,
+      255
+    ]
+  },
+  {
+    "path": "flutter_app/assets/images/background_creatures/worlds/colossus.png",
+    "width": 1280,
+    "height": 144,
+    "alpha": [
+      0,
+      255
+    ],
+    "frames": 4,
+    "cell": [
+      320,
+      144
+    ],
+    "nonempty": true,
+    "distinct_frames": 3
+  },
+  {
+    "path": "flutter_app/assets/images/background_creatures/worlds/crawler.png",
+    "width": 320,
+    "height": 40,
+    "alpha": [
+      0,
+      255
+    ],
+    "frames": 4,
+    "cell": [
+      80,
+      40
+    ],
+    "nonempty": true,
+    "distinct_frames": 3
+  },
+  {
+    "path": "flutter_app/assets/images/background_creatures/worlds/spirit.png",
+    "width": 256,
+    "height": 80,
+    "alpha": [
+      0,
+      255
+    ],
+    "frames": 4,
+    "cell": [
+      64,
+      80
+    ],
+    "nonempty": true,
+    "distinct_frames": 3
+  }
+]

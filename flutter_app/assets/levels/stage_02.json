@@ -1,0 +1,613 @@
+{
+  "schema": 3,
+  "id": "stage_02",
+  "title": "Galerias Quebradas",
+  "version": 1,
+  "width": 8448,
+  "height": 2304,
+  "solids": [
+    {
+      "id": "g0",
+      "x": 0,
+      "y": 1792,
+      "width": 384,
+      "height": 128
+    },
+    {
+      "id": "g1",
+      "x": 480,
+      "y": 1728,
+      "width": 224,
+      "height": 64
+    },
+    {
+      "id": "g2",
+      "x": 800,
+      "y": 1664,
+      "width": 224,
+      "height": 64
+    },
+    {
+      "id": "g3",
+      "x": 1120,
+      "y": 1600,
+      "width": 256,
+      "height": 64
+    },
+    {
+      "id": "g4",
+      "x": 1472,
+      "y": 1664,
+      "width": 320,
+      "height": 64
+    },
+    {
+      "id": "g5",
+      "x": 1888,
+      "y": 1600,
+      "width": 224,
+      "height": 64
+    },
+    {
+      "id": "g6",
+      "x": 2208,
+      "y": 1536,
+      "width": 192,
+      "height": 64
+    },
+    {
+      "id": "g8",
+      "x": 2784,
+      "y": 1536,
+      "width": 192,
+      "height": 64
+    },
+    {
+      "id": "g9",
+      "x": 3072,
+      "y": 1600,
+      "width": 224,
+      "height": 64
+    },
+    {
+      "id": "g10",
+      "x": 3296,
+      "y": 1792,
+      "width": 416,
+      "height": 64
+    },
+    {
+      "id": "chain_well_left",
+      "x": 3520,
+      "y": 1152,
+      "width": 32,
+      "height": 592
+    },
+    {
+      "id": "chain_well_right",
+      "x": 3680,
+      "y": 1152,
+      "width": 32,
+      "height": 640
+    },
+    {
+      "id": "g11",
+      "x": 3712,
+      "y": 1152,
+      "width": 320,
+      "height": 64
+    },
+    {
+      "id": "g12",
+      "x": 4128,
+      "y": 1088,
+      "width": 192,
+      "height": 64
+    },
+    {
+      "id": "g14",
+      "x": 4704,
+      "y": 960,
+      "width": 256,
+      "height": 64
+    },
+    {
+      "id": "g15",
+      "x": 5056,
+      "y": 1024,
+      "width": 224,
+      "height": 64
+    },
+    {
+      "id": "g16",
+      "x": 5376,
+      "y": 1088,
+      "width": 224,
+      "height": 64
+    },
+    {
+      "id": "g17",
+      "x": 5696,
+      "y": 1024,
+      "width": 224,
+      "height": 64
+    },
+    {
+      "id": "g19",
+      "x": 6272,
+      "y": 896,
+      "width": 256,
+      "height": 64
+    },
+    {
+      "id": "g20",
+      "x": 6624,
+      "y": 960,
+      "width": 192,
+      "height": 64
+    },
+    {
+      "id": "g22",
+      "x": 7168,
+      "y": 960,
+      "width": 192,
+      "height": 64
+    },
+    {
+      "id": "g23",
+      "x": 7456,
+      "y": 896,
+      "width": 224,
+      "height": 64
+    },
+    {
+      "id": "g24",
+      "x": 7776,
+      "y": 960,
+      "width": 512,
+      "height": 64
+    },
+    {
+      "id": "gb0",
+      "x": 1408,
+      "y": 1600,
+      "width": 96,
+      "height": 32
+    },
+    {
+      "id": "gb1",
+      "x": 1536,
+      "y": 1536,
+      "width": 128,
+      "height": 32
+    },
+    {
+      "id": "gb2",
+      "x": 1760,
+      "y": 1472,
+      "width": 128,
+      "height": 32
+    },
+    {
+      "id": "gb3",
+      "x": 1920,
+      "y": 1536,
+      "width": 96,
+      "height": 32
+    },
+    {
+      "id": "gb4",
+      "x": 6368,
+      "y": 832,
+      "width": 96,
+      "height": 32
+    },
+    {
+      "id": "gb5",
+      "x": 6528,
+      "y": 768,
+      "width": 128,
+      "height": 32
+    },
+    {
+      "id": "gb6",
+      "x": 6752,
+      "y": 832,
+      "width": 128,
+      "height": 32
+    }
+  ],
+  "temporary_platforms": [
+    {
+      "id": "g7",
+      "x": 2496,
+      "y": 1472,
+      "width": 192,
+      "height": 64,
+      "break_after": 1.1,
+      "recover_after": 3
+    },
+    {
+      "id": "g13",
+      "x": 4416,
+      "y": 1024,
+      "width": 192,
+      "height": 64,
+      "break_after": 1.1,
+      "recover_after": 3
+    },
+    {
+      "id": "g18",
+      "x": 6016,
+      "y": 960,
+      "width": 160,
+      "height": 64,
+      "break_after": 1.1,
+      "recover_after": 3
+    },
+    {
+      "id": "g21",
+      "x": 6912,
+      "y": 1024,
+      "width": 160,
+      "height": 64,
+      "break_after": 1.1,
+      "recover_after": 3
+    }
+  ],
+  "props": [
+    {
+      "type": "checkpoint",
+      "id": "stage_02_cp_0",
+      "x": 96,
+      "y": 1792,
+      "label": "Entrada das Galerias",
+      "order": 0
+    },
+    {
+      "type": "checkpoint",
+      "id": "stage_02_cp_1",
+      "x": 1568,
+      "y": 1664,
+      "label": "Passagens Suspensas",
+      "order": 1
+    },
+    {
+      "type": "checkpoint",
+      "id": "stage_02_cp_2",
+      "x": 3616,
+      "y": 1792,
+      "label": "Abismo das Correntes",
+      "order": 2
+    },
+    {
+      "type": "checkpoint",
+      "id": "stage_02_cp_3",
+      "x": 3856,
+      "y": 1152,
+      "label": "Câmara da Ruptura",
+      "order": 3
+    },
+    {
+      "type": "checkpoint",
+      "id": "stage_02_cp_4",
+      "x": 6336,
+      "y": 896,
+      "label": "A Última Travessia",
+      "order": 4
+    },
+    {
+      "type": "echo",
+      "id": "galleries_gate",
+      "x": 912,
+      "y": 1640,
+      "label": "O Reino Suspenso"
+    },
+    {
+      "type": "echo",
+      "id": "galleries_wings",
+      "x": 1824,
+      "y": 1448,
+      "label": "Habitantes do Vazio"
+    },
+    {
+      "type": "echo",
+      "id": "galleries_chain",
+      "x": 3616,
+      "y": 1410,
+      "label": "O Peso do Silêncio"
+    },
+    {
+      "type": "echo",
+      "id": "galleries_rupture",
+      "x": 4832,
+      "y": 936,
+      "label": "A Ruptura"
+    },
+    {
+      "type": "echo",
+      "id": "galleries_secret",
+      "x": 6592,
+      "y": 744,
+      "label": "Ferro e Raiz"
+    },
+    {
+      "type": "echo",
+      "id": "galleries_bridge",
+      "x": 7568,
+      "y": 872,
+      "label": "A Travessia"
+    },
+    {
+      "type": "echo",
+      "id": "galleries_last",
+      "x": 8000,
+      "y": 936,
+      "label": "O Chamado da Torre"
+    },
+    {
+      "type": "checkpoint_final",
+      "id": "stage_02_goal",
+      "x": 8160,
+      "y": 960,
+      "label": "Farol do Lume",
+      "order": 99
+    }
+  ],
+  "sections": [
+    {
+      "name": "Entrada das Galerias",
+      "start": 0,
+      "end": 1792,
+      "top": 0,
+      "bottom": 2304
+    },
+    {
+      "name": "Passagens Suspensas",
+      "start": 1792,
+      "end": 3296,
+      "top": 0,
+      "bottom": 2304
+    },
+    {
+      "name": "Abismo das Correntes",
+      "start": 3296,
+      "end": 4080,
+      "top": 1200,
+      "bottom": 2304
+    },
+    {
+      "name": "Câmara da Ruptura",
+      "start": 3296,
+      "end": 5696,
+      "top": 0,
+      "bottom": 1200
+    },
+    {
+      "name": "A Última Travessia",
+      "start": 5696,
+      "end": 8448,
+      "top": 0,
+      "bottom": 2304
+    }
+  ],
+  "narrative_triggers": [
+    {
+      "id": "g_entry",
+      "sequence": "g_entry",
+      "x": 120,
+      "y": 1792,
+      "radius": 100,
+      "vertical_radius": 80
+    },
+    {
+      "id": "g_wings",
+      "sequence": "g_wings",
+      "x": 1568,
+      "y": 1664,
+      "radius": 100,
+      "vertical_radius": 80
+    },
+    {
+      "id": "g_depth",
+      "sequence": "g_depth",
+      "x": 3616,
+      "y": 1792,
+      "radius": 90,
+      "vertical_radius": 80
+    },
+    {
+      "id": "g_rupture",
+      "sequence": "g_rupture",
+      "x": 4832,
+      "y": 960,
+      "radius": 100,
+      "vertical_radius": 80
+    }
+  ],
+  "route": [
+    {
+      "kind": "landing",
+      "surface": "g0"
+    },
+    {
+      "kind": "landing",
+      "surface": "g1"
+    },
+    {
+      "kind": "landing",
+      "surface": "g2"
+    },
+    {
+      "kind": "landing",
+      "surface": "g3"
+    },
+    {
+      "kind": "landing",
+      "surface": "g4"
+    },
+    {
+      "kind": "landing",
+      "surface": "g5"
+    },
+    {
+      "kind": "landing",
+      "surface": "g6"
+    },
+    {
+      "kind": "landing",
+      "surface": "g7"
+    },
+    {
+      "kind": "landing",
+      "surface": "g8"
+    },
+    {
+      "kind": "landing",
+      "surface": "g9"
+    },
+    {
+      "kind": "landing",
+      "surface": "g10",
+      "x": 3616
+    },
+    {
+      "kind": "shaft",
+      "id": "chain_well",
+      "x": 3616,
+      "top": 1152,
+      "exit_surface": "g11",
+      "exit_x": 3856,
+      "direction": 1
+    },
+    {
+      "kind": "landing",
+      "surface": "g11"
+    },
+    {
+      "kind": "landing",
+      "surface": "g12"
+    },
+    {
+      "kind": "landing",
+      "surface": "g13"
+    },
+    {
+      "kind": "landing",
+      "surface": "g14"
+    },
+    {
+      "kind": "landing",
+      "surface": "g15"
+    },
+    {
+      "kind": "landing",
+      "surface": "g16"
+    },
+    {
+      "kind": "landing",
+      "surface": "g17"
+    },
+    {
+      "kind": "landing",
+      "surface": "g18"
+    },
+    {
+      "kind": "landing",
+      "surface": "g19"
+    },
+    {
+      "kind": "landing",
+      "surface": "g20"
+    },
+    {
+      "kind": "landing",
+      "surface": "g21"
+    },
+    {
+      "kind": "landing",
+      "surface": "g22"
+    },
+    {
+      "kind": "landing",
+      "surface": "g23"
+    },
+    {
+      "kind": "landing",
+      "surface": "g24"
+    }
+  ],
+  "shafts": [
+    {
+      "id": "chain_well",
+      "left": 3552,
+      "right": 3680,
+      "top": 1152,
+      "bottom": 1792
+    }
+  ],
+  "ambient_actors": [
+    {
+      "sprite": "moth",
+      "x": 130,
+      "y": 100,
+      "factor": 0.12,
+      "opacity": 0.5
+    },
+    {
+      "sprite": "crawler",
+      "x": 490,
+      "y": 220,
+      "factor": 0.32,
+      "opacity": 0.6
+    }
+  ],
+  "ambient_events": [
+    {
+      "id": "colossus",
+      "kind": "crossing",
+      "sprite": "colossus",
+      "x": 3296,
+      "y": 800,
+      "width": 700,
+      "height": 1200,
+      "duration": 28
+    }
+  ],
+  "camera": {
+    "look_ahead": 48,
+    "follow_rate": 7
+  },
+  "tile_asset": "tilesets/stage_02_ruins_tiles.png",
+  "spawn": [
+    96,
+    1792
+  ],
+  "checkpoint_fall_limit": 768,
+  "required_echoes": [
+    "galleries_rupture"
+  ],
+  "final_sequence": "g_exit",
+  "layers": [
+    {
+      "asset": "parallax/stage_02/01_petroil_void.png",
+      "parallax": 0.035,
+      "parallax_y": 0.015
+    },
+    {
+      "asset": "parallax/stage_02/02_suspended_galleries.png",
+      "parallax": 0.18,
+      "parallax_y": 0.07
+    },
+    {
+      "asset": "parallax/stage_02/03_chains_and_windbreaks.png",
+      "parallax": 0.47,
+      "parallax_y": 0.14
+    },
+    {
+      "asset": "parallax/stage_02/04_wind_haze.png",
+      "parallax": 0.68,
+      "parallax_y": 0.2
+    }
+  ]
+}

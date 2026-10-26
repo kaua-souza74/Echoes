@@ -1,0 +1,23 @@
+{
+  "name": "Vale das Vozes — O Despertar",
+  "colors": {
+    "void": "#080E19",
+    "charcoal_blue": "#0B111C",
+    "deep_navy": "#111D2B",
+    "cold_stone": "#1C2B3A",
+    "stone_relief": "#26394A",
+    "slate": "#34495D",
+    "lit_edge": "#526B7C",
+    "distant_mist": "#526C80",
+    "pale_mist": "#71879A",
+    "porcelain": "#B0C3CA",
+    "lume_shadow": "#367B8D",
+    "lume": "#58B6C8",
+    "lume_highlight": "#84D9E8",
+    "mask_glint": "#D7F4EE",
+    "somber_violet": "#514568",
+    "moss": "#36554E",
+    "moss_light": "#63816C",
+    "worn_gold": "#B49A70"
+  }
+}

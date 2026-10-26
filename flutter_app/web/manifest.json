@@ -1,0 +1,35 @@
+{
+    "name": "ECHOES — O Despertar",
+    "short_name": "ECHOES",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#080e19",
+    "theme_color": "#111d2b",
+    "description": "O Despertar — vertical slice offline de ECHOES.",
+    "orientation": "landscape",
+    "prefer_related_applications": false,
+    "icons": [
+        {
+            "src": "icons/Icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/Icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/Icon-maskable-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
+            "src": "icons/Icon-maskable-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ]
+}

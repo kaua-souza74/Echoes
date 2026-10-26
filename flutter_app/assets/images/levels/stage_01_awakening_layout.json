@@ -1,0 +1,100 @@
+{
+  "name": "O Despertar — trecho 01",
+  "unit": "32px tile",
+  "tile_size": 32,
+  "canvas_tiles": [
+    40,
+    16
+  ],
+  "layers": [
+    {
+      "name": "sky",
+      "asset": "parallax/stage_01/01_sky_mist.png",
+      "parallax": 0.035
+    },
+    {
+      "name": "far",
+      "asset": "parallax/stage_01/02_far_architecture.png",
+      "parallax": 0.14
+    },
+    {
+      "name": "mid",
+      "asset": "parallax/stage_01/03_mid_architecture.png",
+      "parallax": 0.34
+    },
+    {
+      "name": "near",
+      "asset": "parallax/stage_01/04_near_decor.png",
+      "parallax": 0.58
+    },
+    {
+      "name": "fog",
+      "asset": "parallax/stage_01/05_breathing_fog.png",
+      "parallax": 0.79
+    },
+    {
+      "name": "shafts",
+      "asset": "parallax/stage_01/06_lume_shafts.png",
+      "parallax": 0.18
+    },
+    {
+      "name": "world",
+      "asset": "tilesets/stage_01_ruins_tiles.png",
+      "parallax": 1.0
+    }
+  ],
+  "platforms": [
+    [
+      0,
+      12,
+      11,
+      4
+    ],
+    [
+      14,
+      10,
+      6,
+      2
+    ],
+    [
+      22,
+      8,
+      5,
+      2
+    ],
+    [
+      31,
+      6,
+      9,
+      3
+    ]
+  ],
+  "props": [
+    {
+      "type": "checkpoint",
+      "asset": "props/checkpoint_lume.png",
+      "tile_xy": [
+        3,
+        10
+      ]
+    },
+    {
+      "type": "echo",
+      "asset": "props/echo_fragment.png",
+      "tile_xy": [
+        26,
+        7
+      ]
+    },
+    {
+      "type": "checkpoint_final",
+      "asset": "props/checkpoint_lume.png",
+      "tile_xy": [
+        34,
+        4
+      ]
+    }
+  ],
+  "note": "Reference layout only; tile collision and spawn transforms are authored by the gameplay integrator.",
+  "art_pass": "2.0 — camadas de profundidade, névoa e feixes de Lume; colisões preservadas"
+}

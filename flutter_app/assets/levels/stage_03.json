@@ -1,0 +1,901 @@
+{
+  "schema": 3,
+  "id": "stage_03",
+  "title": "Torre do Eco",
+  "version": 1,
+  "width": 2560,
+  "height": 5632,
+  "solids": [
+    {
+      "id": "t0",
+      "x": 256,
+      "y": 5376,
+      "width": 512,
+      "height": 128
+    },
+    {
+      "id": "t1",
+      "x": 864,
+      "y": 5312,
+      "width": 224,
+      "height": 64
+    },
+    {
+      "id": "t2",
+      "x": 1184,
+      "y": 5248,
+      "width": 224,
+      "height": 64
+    },
+    {
+      "id": "t3",
+      "x": 1504,
+      "y": 5184,
+      "width": 256,
+      "height": 64
+    },
+    {
+      "id": "t4",
+      "x": 1856,
+      "y": 5120,
+      "width": 480,
+      "height": 64
+    },
+    {
+      "id": "lower_lancet_left",
+      "x": 2112,
+      "y": 4480,
+      "width": 32,
+      "height": 592
+    },
+    {
+      "id": "lower_lancet_right",
+      "x": 2272,
+      "y": 4480,
+      "width": 32,
+      "height": 640
+    },
+    {
+      "id": "t5",
+      "x": 1856,
+      "y": 4480,
+      "width": 256,
+      "height": 64
+    },
+    {
+      "id": "t6",
+      "x": 1536,
+      "y": 4416,
+      "width": 224,
+      "height": 64
+    },
+    {
+      "id": "t8",
+      "x": 896,
+      "y": 4288,
+      "width": 224,
+      "height": 64
+    },
+    {
+      "id": "t9",
+      "x": 576,
+      "y": 4224,
+      "width": 224,
+      "height": 64
+    },
+    {
+      "id": "t10",
+      "x": 256,
+      "y": 4160,
+      "width": 224,
+      "height": 64
+    },
+    {
+      "id": "t11",
+      "x": 128,
+      "y": 4096,
+      "width": 64,
+      "height": 32
+    },
+    {
+      "id": "t12",
+      "x": 0,
+      "y": 4032,
+      "width": 64,
+      "height": 32
+    },
+    {
+      "id": "t13",
+      "x": 128,
+      "y": 3968,
+      "width": 64,
+      "height": 32
+    },
+    {
+      "id": "t14",
+      "x": 288,
+      "y": 3904,
+      "width": 224,
+      "height": 64
+    },
+    {
+      "id": "t16",
+      "x": 928,
+      "y": 3776,
+      "width": 224,
+      "height": 64
+    },
+    {
+      "id": "t17",
+      "x": 1248,
+      "y": 3712,
+      "width": 224,
+      "height": 64
+    },
+    {
+      "id": "t18",
+      "x": 1568,
+      "y": 3648,
+      "width": 224,
+      "height": 64
+    },
+    {
+      "id": "t19",
+      "x": 1888,
+      "y": 3584,
+      "width": 480,
+      "height": 64
+    },
+    {
+      "id": "broken_stair_left",
+      "x": 2112,
+      "y": 2944,
+      "width": 32,
+      "height": 592
+    },
+    {
+      "id": "broken_stair_right",
+      "x": 2272,
+      "y": 2944,
+      "width": 32,
+      "height": 640
+    },
+    {
+      "id": "t20",
+      "x": 1856,
+      "y": 2944,
+      "width": 256,
+      "height": 64
+    },
+    {
+      "id": "t21",
+      "x": 1536,
+      "y": 2880,
+      "width": 224,
+      "height": 64
+    },
+    {
+      "id": "t22",
+      "x": 1216,
+      "y": 2816,
+      "width": 224,
+      "height": 64
+    },
+    {
+      "id": "t24",
+      "x": 576,
+      "y": 2688,
+      "width": 224,
+      "height": 64
+    },
+    {
+      "id": "t25",
+      "x": 256,
+      "y": 2624,
+      "width": 224,
+      "height": 64
+    },
+    {
+      "id": "t26",
+      "x": 128,
+      "y": 2560,
+      "width": 64,
+      "height": 32
+    },
+    {
+      "id": "t27",
+      "x": 0,
+      "y": 2496,
+      "width": 64,
+      "height": 32
+    },
+    {
+      "id": "t28",
+      "x": 128,
+      "y": 2432,
+      "width": 64,
+      "height": 32
+    },
+    {
+      "id": "t29",
+      "x": 288,
+      "y": 2368,
+      "width": 224,
+      "height": 64
+    },
+    {
+      "id": "t30",
+      "x": 608,
+      "y": 2304,
+      "width": 224,
+      "height": 64
+    },
+    {
+      "id": "t31",
+      "x": 928,
+      "y": 2240,
+      "width": 320,
+      "height": 64
+    },
+    {
+      "id": "t32",
+      "x": 1344,
+      "y": 2176,
+      "width": 224,
+      "height": 64
+    },
+    {
+      "id": "t33",
+      "x": 1664,
+      "y": 2112,
+      "width": 224,
+      "height": 64
+    },
+    {
+      "id": "t34",
+      "x": 1984,
+      "y": 2048,
+      "width": 384,
+      "height": 64
+    },
+    {
+      "id": "memory_lancet_left",
+      "x": 2112,
+      "y": 1536,
+      "width": 32,
+      "height": 464
+    },
+    {
+      "id": "memory_lancet_right",
+      "x": 2272,
+      "y": 1536,
+      "width": 32,
+      "height": 512
+    },
+    {
+      "id": "t35",
+      "x": 1856,
+      "y": 1536,
+      "width": 256,
+      "height": 64
+    },
+    {
+      "id": "t36",
+      "x": 1536,
+      "y": 1472,
+      "width": 224,
+      "height": 64
+    },
+    {
+      "id": "t38",
+      "x": 896,
+      "y": 1344,
+      "width": 224,
+      "height": 64
+    },
+    {
+      "id": "t39",
+      "x": 576,
+      "y": 1280,
+      "width": 224,
+      "height": 64
+    },
+    {
+      "id": "t40",
+      "x": 256,
+      "y": 1216,
+      "width": 224,
+      "height": 64
+    },
+    {
+      "id": "t41",
+      "x": 128,
+      "y": 1152,
+      "width": 64,
+      "height": 32
+    },
+    {
+      "id": "t42",
+      "x": 0,
+      "y": 1088,
+      "width": 64,
+      "height": 32
+    },
+    {
+      "id": "t43",
+      "x": 128,
+      "y": 1024,
+      "width": 64,
+      "height": 32
+    },
+    {
+      "id": "t44",
+      "x": 288,
+      "y": 960,
+      "width": 224,
+      "height": 64
+    },
+    {
+      "id": "t45",
+      "x": 608,
+      "y": 896,
+      "width": 224,
+      "height": 64
+    },
+    {
+      "id": "t46",
+      "x": 928,
+      "y": 832,
+      "width": 224,
+      "height": 64
+    },
+    {
+      "id": "t47",
+      "x": 1248,
+      "y": 768,
+      "width": 512,
+      "height": 64
+    },
+    {
+      "id": "tb0",
+      "x": 2400,
+      "y": 4416,
+      "width": 160,
+      "height": 32
+    },
+    {
+      "id": "tb1",
+      "x": 2400,
+      "y": 2880,
+      "width": 160,
+      "height": 32
+    },
+    {
+      "id": "tb2",
+      "x": 160,
+      "y": 2688,
+      "width": 64,
+      "height": 32
+    }
+  ],
+  "temporary_platforms": [
+    {
+      "id": "t7",
+      "x": 1216,
+      "y": 4352,
+      "width": 224,
+      "height": 64,
+      "break_after": 1.1,
+      "recover_after": 3
+    },
+    {
+      "id": "t15",
+      "x": 608,
+      "y": 3840,
+      "width": 224,
+      "height": 64,
+      "break_after": 1.1,
+      "recover_after": 3
+    },
+    {
+      "id": "t23",
+      "x": 896,
+      "y": 2752,
+      "width": 224,
+      "height": 64,
+      "break_after": 1.1,
+      "recover_after": 3
+    },
+    {
+      "id": "t37",
+      "x": 1216,
+      "y": 1408,
+      "width": 224,
+      "height": 64,
+      "break_after": 1.1,
+      "recover_after": 3
+    }
+  ],
+  "props": [
+    {
+      "type": "checkpoint",
+      "id": "stage_03_cp_0",
+      "x": 384,
+      "y": 5376,
+      "label": "Base da Torre",
+      "order": 0
+    },
+    {
+      "type": "checkpoint",
+      "id": "stage_03_cp_1",
+      "x": 1984,
+      "y": 4480,
+      "label": "Salão dos Fragmentos",
+      "order": 1
+    },
+    {
+      "type": "checkpoint",
+      "id": "stage_03_cp_2",
+      "x": 1984,
+      "y": 2944,
+      "label": "Escadaria Partida",
+      "order": 2
+    },
+    {
+      "type": "checkpoint",
+      "id": "stage_03_cp_3",
+      "x": 1088,
+      "y": 2240,
+      "label": "Câmara das Memórias",
+      "order": 3
+    },
+    {
+      "type": "checkpoint",
+      "id": "stage_03_cp_4",
+      "x": 1984,
+      "y": 1536,
+      "label": "O Último Eco",
+      "order": 4
+    },
+    {
+      "type": "echo",
+      "id": "tower_threshold",
+      "x": 1296,
+      "y": 5224,
+      "label": "O Limiar"
+    },
+    {
+      "type": "echo",
+      "id": "tower_glass",
+      "x": 2480,
+      "y": 4392,
+      "label": "Vidro Vivo"
+    },
+    {
+      "type": "echo",
+      "id": "tower_guardian",
+      "x": 1616,
+      "y": 3624,
+      "label": "Os Guardiões"
+    },
+    {
+      "type": "echo",
+      "id": "tower_shadow",
+      "x": 2480,
+      "y": 2856,
+      "label": "A Voz Ausente"
+    },
+    {
+      "type": "echo",
+      "id": "tower_alcove",
+      "x": 192,
+      "y": 2664,
+      "label": "O Nome Riscado"
+    },
+    {
+      "type": "echo",
+      "id": "tower_memory",
+      "x": 1088,
+      "y": 2216,
+      "label": "A Memória Alterada"
+    },
+    {
+      "type": "echo",
+      "id": "tower_last",
+      "x": 1440,
+      "y": 744,
+      "label": "O Último Eco"
+    },
+    {
+      "type": "checkpoint_final",
+      "id": "stage_03_goal",
+      "x": 1632,
+      "y": 768,
+      "label": "Farol do Lume",
+      "order": 99
+    }
+  ],
+  "sections": [
+    {
+      "name": "Base da Torre",
+      "start": 0,
+      "end": 2560,
+      "top": 4481,
+      "bottom": 5632
+    },
+    {
+      "name": "Salão dos Fragmentos",
+      "start": 0,
+      "end": 2560,
+      "top": 2945,
+      "bottom": 4481
+    },
+    {
+      "name": "Escadaria Partida",
+      "start": 0,
+      "end": 2560,
+      "top": 2369,
+      "bottom": 2945
+    },
+    {
+      "name": "Câmara das Memórias",
+      "start": 0,
+      "end": 2560,
+      "top": 1537,
+      "bottom": 2369
+    },
+    {
+      "name": "O Último Eco",
+      "start": 0,
+      "end": 2560,
+      "top": 0,
+      "bottom": 1537
+    }
+  ],
+  "narrative_triggers": [
+    {
+      "id": "t_base",
+      "sequence": "t_base",
+      "x": 416,
+      "y": 5376,
+      "radius": 100,
+      "vertical_radius": 80
+    },
+    {
+      "id": "t_fragments",
+      "sequence": "t_fragments",
+      "x": 1984,
+      "y": 4480,
+      "radius": 100,
+      "vertical_radius": 80
+    },
+    {
+      "id": "t_guardians",
+      "sequence": "t_guardians",
+      "x": 1984,
+      "y": 2944,
+      "radius": 100,
+      "vertical_radius": 80
+    },
+    {
+      "id": "t_memory",
+      "sequence": "t_memory",
+      "x": 1088,
+      "y": 2240,
+      "radius": 100,
+      "vertical_radius": 80
+    }
+  ],
+  "route": [
+    {
+      "kind": "landing",
+      "surface": "t0"
+    },
+    {
+      "kind": "landing",
+      "surface": "t1"
+    },
+    {
+      "kind": "landing",
+      "surface": "t2"
+    },
+    {
+      "kind": "landing",
+      "surface": "t3"
+    },
+    {
+      "kind": "landing",
+      "surface": "t4",
+      "x": 2216
+    },
+    {
+      "kind": "shaft",
+      "id": "lower_lancet",
+      "x": 2208,
+      "top": 4480,
+      "exit_surface": "t5",
+      "exit_x": 1984,
+      "direction": -1
+    },
+    {
+      "kind": "landing",
+      "surface": "t5"
+    },
+    {
+      "kind": "landing",
+      "surface": "t6"
+    },
+    {
+      "kind": "landing",
+      "surface": "t7"
+    },
+    {
+      "kind": "landing",
+      "surface": "t8"
+    },
+    {
+      "kind": "landing",
+      "surface": "t9"
+    },
+    {
+      "kind": "landing",
+      "surface": "t10"
+    },
+    {
+      "kind": "landing",
+      "surface": "t11"
+    },
+    {
+      "kind": "landing",
+      "surface": "t12"
+    },
+    {
+      "kind": "landing",
+      "surface": "t13"
+    },
+    {
+      "kind": "landing",
+      "surface": "t14"
+    },
+    {
+      "kind": "landing",
+      "surface": "t15"
+    },
+    {
+      "kind": "landing",
+      "surface": "t16"
+    },
+    {
+      "kind": "landing",
+      "surface": "t17"
+    },
+    {
+      "kind": "landing",
+      "surface": "t18"
+    },
+    {
+      "kind": "landing",
+      "surface": "t19",
+      "x": 2216
+    },
+    {
+      "kind": "shaft",
+      "id": "broken_stair",
+      "x": 2208,
+      "top": 2944,
+      "exit_surface": "t20",
+      "exit_x": 1984,
+      "direction": -1
+    },
+    {
+      "kind": "landing",
+      "surface": "t20"
+    },
+    {
+      "kind": "landing",
+      "surface": "t21"
+    },
+    {
+      "kind": "landing",
+      "surface": "t22"
+    },
+    {
+      "kind": "landing",
+      "surface": "t23"
+    },
+    {
+      "kind": "landing",
+      "surface": "t24"
+    },
+    {
+      "kind": "landing",
+      "surface": "t25"
+    },
+    {
+      "kind": "landing",
+      "surface": "t26"
+    },
+    {
+      "kind": "landing",
+      "surface": "t27"
+    },
+    {
+      "kind": "landing",
+      "surface": "t28"
+    },
+    {
+      "kind": "landing",
+      "surface": "t29"
+    },
+    {
+      "kind": "landing",
+      "surface": "t30"
+    },
+    {
+      "kind": "landing",
+      "surface": "t31"
+    },
+    {
+      "kind": "landing",
+      "surface": "t32"
+    },
+    {
+      "kind": "landing",
+      "surface": "t33"
+    },
+    {
+      "kind": "landing",
+      "surface": "t34",
+      "x": 2216
+    },
+    {
+      "kind": "shaft",
+      "id": "memory_lancet",
+      "x": 2208,
+      "top": 1536,
+      "exit_surface": "t35",
+      "exit_x": 1984,
+      "direction": -1
+    },
+    {
+      "kind": "landing",
+      "surface": "t35"
+    },
+    {
+      "kind": "landing",
+      "surface": "t36"
+    },
+    {
+      "kind": "landing",
+      "surface": "t37"
+    },
+    {
+      "kind": "landing",
+      "surface": "t38"
+    },
+    {
+      "kind": "landing",
+      "surface": "t39"
+    },
+    {
+      "kind": "landing",
+      "surface": "t40"
+    },
+    {
+      "kind": "landing",
+      "surface": "t41"
+    },
+    {
+      "kind": "landing",
+      "surface": "t42"
+    },
+    {
+      "kind": "landing",
+      "surface": "t43"
+    },
+    {
+      "kind": "landing",
+      "surface": "t44"
+    },
+    {
+      "kind": "landing",
+      "surface": "t45"
+    },
+    {
+      "kind": "landing",
+      "surface": "t46"
+    },
+    {
+      "kind": "landing",
+      "surface": "t47"
+    }
+  ],
+  "shafts": [
+    {
+      "id": "lower_lancet",
+      "left": 2144,
+      "right": 2272,
+      "top": 4480,
+      "bottom": 5120
+    },
+    {
+      "id": "broken_stair",
+      "left": 2144,
+      "right": 2272,
+      "top": 2944,
+      "bottom": 3584
+    },
+    {
+      "id": "memory_lancet",
+      "left": 2144,
+      "right": 2272,
+      "top": 1536,
+      "bottom": 2048
+    }
+  ],
+  "ambient_actors": [
+    {
+      "sprite": "spirit",
+      "x": 170,
+      "y": 115,
+      "factor": 0.08,
+      "opacity": 0.58
+    },
+    {
+      "sprite": "spirit",
+      "x": 510,
+      "y": 230,
+      "factor": 0.24,
+      "opacity": 0.4
+    }
+  ],
+  "ambient_events": [
+    {
+      "id": "revelation",
+      "kind": "light",
+      "sprite": "spirit",
+      "x": 1248,
+      "y": 600,
+      "width": 512,
+      "height": 300,
+      "duration": 30
+    }
+  ],
+  "camera": {
+    "look_ahead": 48,
+    "follow_rate": 7
+  },
+  "tile_asset": "tilesets/stage_03_ruins_tiles.png",
+  "spawn": [
+    384,
+    5376
+  ],
+  "checkpoint_fall_limit": 640,
+  "required_echoes": [
+    "tower_memory",
+    "tower_last"
+  ],
+  "final_sequence": "t_final",
+  "layers": [
+    {
+      "asset": "parallax/stage_03/01_indigo_aperture.png",
+      "parallax": 0.025,
+      "parallax_y": 0.035
+    },
+    {
+      "asset": "parallax/stage_03/02_echo_tower.png",
+      "parallax": 0.11,
+      "parallax_y": 0.12
+    },
+    {
+      "asset": "parallax/stage_03/03_shattered_lancets.png",
+      "parallax": 0.32,
+      "parallax_y": 0.24
+    },
+    {
+      "asset": "parallax/stage_03/04_silver_mist.png",
+      "parallax": 0.55,
+      "parallax_y": 0.34
+    }
+  ]
+}

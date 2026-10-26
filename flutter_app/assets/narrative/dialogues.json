@@ -1,0 +1,104 @@
+{
+  "awakening": {
+    "speaker": "Eco Desconhecido",
+    "lines": [
+      "Devagar… A pedra ainda se lembra do seu peso.",
+      "Havia vozes nestas galerias. Agora, só a luz encontra o caminho.",
+      "Se ouvir o próprio nome, não o deixe desaparecer."
+    ]
+  },
+  "bridge": {
+    "speaker": "Memória da Ponte",
+    "lines": [
+      "Esta ponte carregava mais que passos. Cada pedra guardava uma despedida.",
+      "Você atravessou aqui antes. Eu reconheço a maneira como hesita."
+    ]
+  },
+  "heart": {
+    "speaker": "Coração do Lume",
+    "lines": [
+      "Não foi a escuridão que nos calou. Alguém pediu ao Lume que esquecesse.",
+      "Você guardava a porta quando as vozes se partiram.",
+      "Não sei se tentou nos salvar… Só lembro que ficou."
+    ]
+  },
+  "passage": {
+    "speaker": "Eco Desconhecido",
+    "lines": [
+      "As correntes além desta passagem ainda se movem.",
+      "Leve esta lembrança. O que dorme nas Galerias sabe quem você foi."
+    ]
+  },
+  "g_entry": {
+    "speaker": "Memória da Galeria",
+    "lines": [
+      "O reino não terminava na pedra. Erguemos estas pontes para escutar o que havia do outro lado.",
+      "Depois do Silêncio, continuaram suspensas. Como uma pergunta sem resposta."
+    ]
+  },
+  "g_wings": {
+    "speaker": "Eco das Asas",
+    "lines": [
+      "Elas chegaram quando nossas vozes desapareceram. Nunca atacaram os faróis.",
+      "Talvez estejam esperando que voltemos a acendê-los."
+    ]
+  },
+  "g_depth": {
+    "speaker": "O Vigia das Correntes",
+    "lines": [
+      "Não faça ruído por medo. Aquele que cruza o abismo conhece o som dos seus passos.",
+      "Ele viu você partir… E guardou este caminho."
+    ]
+  },
+  "g_rupture": {
+    "speaker": "Memória da Ruptura",
+    "lines": [
+      "Esse impulso não rompe o ar. Por um instante, você atravessa o lugar onde uma lembrança deveria estar.",
+      "A primeira fenda tinha a forma da sua mão."
+    ]
+  },
+  "g_exit": {
+    "speaker": "Eco da Travessia",
+    "lines": [
+      "A Torre ainda responde aos guardiões. Foi por isso que ela chamou você.",
+      "Quando chegar ao alto, pergunte o que pediram que você esquecesse."
+    ]
+  },
+  "t_base": {
+    "speaker": "A Voz da Torre",
+    "lines": [
+      "Você voltou com o mesmo silêncio. Mas ele já não pesa como antes.",
+      "Suba. Há uma memória que não consegui apagar."
+    ]
+  },
+  "t_fragments": {
+    "speaker": "Memória do Vidro",
+    "lines": [
+      "Cada janela guardava uma vida. Os guardiões não possuíam o Lume: davam abrigo a ele.",
+      "Quando a luz se partiu, alguém escolheu quais vidas ainda seriam lembradas."
+    ]
+  },
+  "t_guardians": {
+    "speaker": "Voz dos Guardiões",
+    "lines": [
+      "Você estava entre nós. Reconheço a centelha sob o seu manto.",
+      "A ordem era fechar a câmara. Você abriu a porta."
+    ]
+  },
+  "t_memory": {
+    "speaker": "A Memória Alterada",
+    "lines": [
+      "Queriam preservar o reino retirando dele toda dor. O Lume também teria levado o amor, os nomes, as despedidas.",
+      "Você quebrou o selo para impedir o esquecimento. Mas a luz não voltou inteira.",
+      "Sua própria memória foi o preço de manter aberta uma passagem."
+    ]
+  },
+  "t_final": {
+    "speaker": "O Último Eco",
+    "lines": [
+      "O mundo não esqueceu você por acaso. Foi a promessa que fez à luz: ninguém carregaria sozinho a lembrança daquela noite.",
+      "Eu guardei um fragmento do seu nome. Ainda não sei se ele pode ser devolvido.",
+      "Leve os outros de volta ao vale. Desta vez, escolha o que merece ser lembrado."
+    ]
+  }
+}

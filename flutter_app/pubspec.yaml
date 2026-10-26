@@ -1,0 +1,57 @@
+name: echoes
+description: "ECHOES — O Despertar, vertical slice offline."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.10.8
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flame: 1.35.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/levels/stage_01.json
+    - assets/narrative/dialogues.json
+    - assets/images/narrative/memory_portrait.png
+    - assets/images/player/errante_idle.png
+    - assets/images/player/errante_run.png
+    - assets/images/player/errante_jump.png
+    - assets/images/player/errante_fall.png
+    - assets/images/player/errante_dash.png
+    - assets/images/player/errante_wall_slide.png
+    - assets/images/parallax/stage_01/01_sky_mist.png
+    - assets/images/parallax/stage_01/02_far_architecture.png
+    - assets/images/parallax/stage_01/03_mid_architecture.png
+    - assets/images/parallax/stage_01/04_near_decor.png
+    - assets/images/parallax/stage_01/05_breathing_fog.png
+    - assets/images/parallax/stage_01/06_lume_shafts.png
+    - assets/images/background_creatures/stage_01/the_listener.png
+    - assets/images/background_creatures/stage_01/veil_moth.png
+    - assets/images/tilesets/stage_01_ruins_tiles.png
+    - assets/images/tilesets/stage_01_ruins_tiles.json
+    - assets/images/levels/stage_01_awakening_layout.json
+    - assets/images/props/checkpoint_lume.png
+    - assets/images/props/echo_fragment.png
+    - assets/images/props/carved_column.png
+    - assets/images/effects/dash_trail.png
+    - assets/images/effects/dust_puff.png
+    - assets/images/effects/lume_glow.png
+    - assets/images/effects/echo_collect.png
+    - assets/levels/stage_02.json
+    - assets/levels/stage_03.json
+    - assets/images/parallax/stage_02/
+    - assets/images/parallax/stage_03/
+    - assets/images/background_creatures/worlds/
+    - assets/images/tilesets/stage_02_ruins_tiles.png
+    - assets/images/tilesets/stage_02_ruins_tiles.json
+    - assets/images/tilesets/stage_03_ruins_tiles.png
+    - assets/images/tilesets/stage_03_ruins_tiles.json
