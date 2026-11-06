@@ -30,6 +30,9 @@ class EchoesGame extends FlameGame with KeyboardEvents {
     this.stageId = 'stage_01',
     PlaySession? session,
     AttemptClock? clock,
+    this.speedrun = false,
+    this.reduceEffects = false,
+    this.onEchoCollected,
   }) : session = session ?? PlaySession(),
        clock = clock ?? AttemptClock(),
        super(
@@ -39,6 +42,9 @@ class EchoesGame extends FlameGame with KeyboardEvents {
   final String stageId;
   final PlaySession session;
   final AttemptClock clock;
+  final bool speedrun, reduceEffects;
+  final ValueChanged<String>? onEchoCollected;
+  bool speedrunEligible = true;
   late int attemptId;
   bool released = false, _recorded = false;
   late TemporaryPlatforms platforms;
@@ -56,6 +62,8 @@ class EchoesGame extends FlameGame with KeyboardEvents {
         deaths: progress.deaths,
         collectibles: progress.echoes,
         completed: progress.completed,
+        mode: speedrun ? 'speedrun' : 'story',
+        eligible: speedrunEligible,
       ),
     );
     _recorded = true;
@@ -109,7 +117,7 @@ class EchoesGame extends FlameGame with KeyboardEvents {
       worldHeight: art.level.height,
     );
     rig.follow(body.x, body.y, body.facing, 0, snap: true);
-    backdrop = ParallaxBackdrop(art, rig);
+    backdrop = ParallaxBackdrop(art, rig, reduceEffects: reduceEffects);
     await camera.backdrop.add(backdrop);
     await world.add(RuinsLevel(art, rig));
     await world.add(TemporaryPlatformView(art, platforms, rig));
@@ -200,13 +208,14 @@ class EchoesGame extends FlameGame with KeyboardEvents {
     _messageTime = math.max(0, _messageTime - dt);
     _dustTime -= dt;
     _trailTime -= dt;
-    if (movement.jumped ||
-        movement.landed ||
-        (body.grounded && body.vx.abs() > 70 && _dustTime <= 0)) {
+    if (!reduceEffects &&
+        (movement.jumped ||
+            movement.landed ||
+            (body.grounded && body.vx.abs() > 70 && _dustTime <= 0))) {
       world.add(OneShotEffect(art, 'dust', x: body.x, y: body.y - 6));
       _dustTime = .16;
     }
-    if (movement.abilities.dashing && _trailTime <= 0) {
+    if (!reduceEffects && movement.abilities.dashing && _trailTime <= 0) {
       world.add(
         OneShotEffect(
           art,
@@ -224,7 +233,8 @@ class EchoesGame extends FlameGame with KeyboardEvents {
       }
       if (beacon.isGoal) {
         final ending = art.level.finalSequence;
-        if (ending.isNotEmpty &&
+        if (!speedrun &&
+            ending.isNotEmpty &&
             art.level.requiredEchoes.every(progress.echoes.contains) &&
             !dialogue.viewed.contains(ending)) {
           if (dialogue.start(ending)) {
@@ -258,6 +268,8 @@ class EchoesGame extends FlameGame with KeyboardEvents {
           (body.x - fragment.x).abs() < 22 &&
           (body.y - 16 - fragment.y).abs() < 28) {
         if (progress.collect(entry.key)) {
+          session.discoveredCollectibles.add(entry.key);
+          onEchoCollected?.call(entry.key);
           fragment.isVisible = false;
           world.add(
             OneShotEffect(art, 'collect', x: fragment.x, y: fragment.y),
@@ -267,7 +279,8 @@ class EchoesGame extends FlameGame with KeyboardEvents {
       }
     }
     for (final trigger in art.level.narrativeTriggers) {
-      if (body.grounded &&
+      if (!speedrun &&
+          body.grounded &&
           (body.x - trigger.x).abs() < trigger.radius &&
           (body.y - trigger.y).abs() < trigger.verticalRadius &&
           dialogue.start(trigger.sequence)) {
@@ -300,6 +313,7 @@ class EchoesGame extends FlameGame with KeyboardEvents {
     }
     final state = HudState(
       echoes: progress.echoes.length,
+      durationMs: clock.durationMs,
       totalEchoes: fragments.length,
       section:
           art.level.sections
@@ -344,6 +358,7 @@ class EchoesGame extends FlameGame with KeyboardEvents {
     recordRun();
     attemptId = session.allocateAttempt();
     _recorded = false;
+    speedrunEligible = true;
     clock.reset();
     platforms.reset();
     backdrop.resetEvents();
@@ -370,6 +385,7 @@ class EchoesGame extends FlameGame with KeyboardEvents {
       return;
     }
     manuallyPaused = value;
+    if (speedrun && value && clock.hasStarted) speedrunEligible = false;
     if (value) clock.pause();
     input.clear();
     _accumulator = 0;

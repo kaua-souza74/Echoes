@@ -1,23 +1,42 @@
-# ECHOES — três mundos
+# ECHOES · O Vale das Vozes
 
-Plataforma narrativa offline em Flutter + Flame com três capítulos jogáveis: O Despertar, Galerias Quebradas e Torre do Eco. São 15 seções, 21 Ecos, 15 checkpoints e 14 sequências narrativas. O aplicativo fica em `flutter_app/`. Pause e use **Selecionar capítulo**; ao concluir uma fase, **Próximo capítulo** continua o arco. Resultados e memórias são locais à sessão, sem backend ou ranking online.
+Plataforma narrativa original em Flutter + Flame com três capítulos, 21 Ecos, 15 checkpoints e 14 conversas. A implementação V2.2 adiciona Supabase Auth, GoRouter, missões, menus, perfil, preferências por conta, memórias educativas, conquistas, speedrun e consultas PostgreSQL de classificação.
+
+**O setup SQL do Supabase foi aplicado e o catálogo público foi confirmado pela API.** Falta validar cadastro/login e progresso com contas reais. A aplicação usa exclusivamente Supabase; o backend simulado existe somente nos testes. Não há jogadores ou pontuações fictícios na classificação de produção.
+
+## Executar
+
+Flutter 3.38.9 / Dart 3.10.8. Dependências fixadas: Flame 1.35.1, Supabase Flutter 2.18.3, GoRouter 17.5.0 e UUID 4.6.0.
 
 ```powershell
 cd flutter_app
-flutter pub get
-flutter run -d windows
-# ou: flutter run -d chrome
+flutter run
 ```
 
-Mova com **A/D ou setas**, pule com **Espaço** (segure para subir mais) e use **Shift** para dash. Empurre uma parede para deslizar e pressione pulo para saltar para longe dela. Esc/P pausa; R retorna ao checkpoint. Há controles de toque equivalentes. Recupere o Coração do Lume e alcance o farol final; os demais Ecos ficam nas rotas de exploração. Quedas retornam ao checkpoint mais recente.
+A URL e a chave pública anon do Supabase do projeto estão incluídas como padrões do cliente, então não é necessário passar argumentos adicionais. `--dart-define` ainda pode sobrescrever esses valores. A chave é pública por projeto; os grants e as políticas RLS limitam o acesso às tabelas privadas. O SQL foi aplicado e a API pública já respondeu com os dados de catálogo do seed. O Auth permite cadastro por e-mail e está configurado com confirmação automática; o fluxo completo de cadastro/login ainda precisa ser exercitado no app.
 
-Nos diálogos, Espaço/Enter ou toque revelam a fala e depois avançam. Esc ou Pular encerram a sequência. A pausa permite rever memórias vistas na sessão. O slice legado permanece como cenário de regressão por `EchoesGame(slice: true)`.
+## Jogar
 
-O SDK auditado foi Flutter 3.38.9/Dart 3.10.8 com Flame 1.35.1. Os runners Windows, Web e Android foram gerados; o ambiente Android tem pendências de licenças e compatibilidade de Java. Veja [o handoff técnico](docs/GAMEPLAY_HANDOFF.md) para estrutura, parâmetros, testes, instruções de build e limitações.
+A/D ou setas: mover. Espaço: salto variável. Shift: dash. R: checkpoint. Empurre uma parede para deslizar e pule para sair. Há controles de toque. Espaço/Enter/toque revelam e avançam diálogos; Esc/Pular encerra a conversa. O retrato transparente foi preservado.
 
-O GDD original é `ECHOES_GDD_v1.1.md`. A direção de arte, manifesto e handoff artístico ficam em `docs/`. `References/` é material de estudo e não entra no bundle. Não há integração com Supabase nesta etapa.
+História exclui loading, pausas e diálogos do tempo ativo. Speedrun omite diálogos automáticos; pausa/perda de foco invalida a tentativa para recordes. Tempos do cliente são explicitamente **não verificados**. Veja [RANKING_RULES](docs/RANKING_RULES.md).
 
-Consulte [o registro da expansão](docs/DEVELOPMENT_LOG.md), [a arquitetura](docs/ARCHITECTURE.md), [o plano de testes](docs/TEST_PLAN.md) e [o estado do backend](docs/SUPABASE_SETUP.md). A meta de duração de primeira jogada ainda precisa de playtest humano.
+Continuar abre o capítulo disponível; não restaura a posição exata de uma sessão fechada. Ecos, memórias, conversas vistas, conclusões, conquistas, preferências e recordes pertencem à conta. Operações sem confirmação aparecem como pendentes; a fila atual fica em memória e é descartada ao fechar o app ou sair da conta.
 
+## Verificar e distribuir
 
-Validação V2.1: 25 testes aprovados, análise estática limpa e builds Web/Windows concluídas. Veja [Level Design](docs/LEVEL_DESIGN.md) e [catálogo de fases](docs/STAGE_REGISTRY.md). As metas de duração ainda precisam de playtest humano.
+```powershell
+cd flutter_app
+flutter analyze
+flutter test
+flutter build web
+flutter build windows
+```
+
+Resultados exatos: [TEST_PLAN](docs/TEST_PLAN.md) e [DEVELOPMENT_LOG](docs/DEVELOPMENT_LOG.md). Android não está validado.
+
+Preview Web com fallback das URLs do GoRouter: `python tools/serve_web.py --port 18768`, a partir da raiz. O servidor só escuta em 127.0.0.1. Hosting Web deve reescrever rotas como /login para index.html. Distribua a pasta Windows Release inteira.
+
+O ZIP escolar limitado a lib/ e pubspec.yaml não executa sozinho: Flame depende também de assets/, dependências resolvidas e arquivos de plataforma. Mantenha o projeto completo com a arte; exclua configuração local e caches do pacote público. Não foi feito push nem publicação.
+
+O GDD original, mapas e arte anteriores foram preservados. Consulte [ARCHITECTURE](docs/ARCHITECTURE.md), [EDUCATIONAL_DESIGN](docs/EDUCATIONAL_DESIGN.md), [LEVEL_DESIGN](docs/LEVEL_DESIGN.md) e os handoffs em docs/.

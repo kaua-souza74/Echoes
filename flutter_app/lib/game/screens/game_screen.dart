@@ -4,15 +4,20 @@ import '../echoes_game.dart';
 import '../hud/hud_state.dart';
 import '../hud/touch_controls.dart';
 import '../../dialogue/dialogue_overlay.dart';
+import '../../app/models.dart' show formatTime;
 
 class GameScreen extends StatefulWidget {
   const GameScreen({
     this.game,
     this.onChooseStage,
     this.onNextStage,
+    this.onRestart,
+    this.showTimer = false,
     super.key,
   });
   final VoidCallback? onChooseStage, onNextStage;
+  final VoidCallback? onRestart;
+  final bool showTimer;
   final EchoesGame? game;
   @override
   State<GameScreen> createState() => _GameScreenState();
@@ -25,6 +30,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     game = widget.game ?? EchoesGame();
+    focus.addListener(_focusChanged);
     WidgetsBinding.instance.addObserver(this);
   }
 
@@ -40,9 +46,16 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    focus.removeListener(_focusChanged);
     game.shutdown();
     focus.dispose();
     super.dispose();
+  }
+
+  void _focusChanged() {
+    if (!focus.hasFocus && game.clock.hasStarted) {
+      game.setPaused(true);
+    }
   }
 
   @override
@@ -148,6 +161,16 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
                                   color: Color(0xffb0c3ca),
                                 ),
                               ),
+                              if (widget.showTimer || game.speedrun)
+                                Text(
+                                  '${formatTime(state.durationMs)}${game.speedrun && !game.speedrunEligible ? ' · tentativa invalidada' : ''}',
+                                  style: const TextStyle(
+                                    color: Color(0xff84d9e8),
+                                    fontFeatures: [
+                                      FontFeature.tabularFigures(),
+                                    ],
+                                  ),
+                                ),
                             ],
                           ),
                         ],
@@ -237,7 +260,9 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
                   const SizedBox(height: 10),
                   Text(
                     state.completed
-                        ? 'A luz conhece este caminho.\n${state.echoes}/${state.totalEchoes} Ecos · Farol aceso\n${game.stageId == 'stage_03' ? 'Fim do primeiro arco · O nome ainda aguarda.' : 'O próximo capítulo aguarda.'}'
+                        ? (game.speedrun
+                              ? '${formatTime(game.clock.durationMs)} · ${state.deaths} quedas\n${game.speedrunEligible ? 'Tempo enviado como não verificado. Aguarde a confirmação de salvamento.' : 'Tentativa invalidada por pausa ou perda de foco. Reinicie para registrar um recorde.'}'
+                              : 'A luz conhece este caminho.\n${state.echoes}/${state.totalEchoes} Ecos · Farol aceso\n${game.stageId == 'stage_03' ? 'Fim do primeiro arco · O nome ainda aguarda.' : 'O próximo capítulo aguarda.'}')
                         : 'A/D ou setas: mover\nEspaço: pulo variável · Shift: dash\nEmpurre a parede para deslizar e pule para sair.\nR: voltar ao checkpoint',
                     textAlign: TextAlign.center,
                     style: const TextStyle(
@@ -249,7 +274,11 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
                   FilledButton(
                     onPressed: () {
                       if (state.completed) {
-                        game.restart();
+                        if (widget.onRestart != null) {
+                          widget.onRestart!();
+                        } else {
+                          game.restart();
+                        }
                       } else {
                         game.setPaused(false);
                       }
@@ -272,7 +301,11 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
                   if (!state.completed)
                     TextButton(
                       onPressed: () {
-                        game.restart();
+                        if (widget.onRestart != null) {
+                          widget.onRestart!();
+                        } else {
+                          game.restart();
+                        }
                         focus.requestFocus();
                       },
                       child: const Text('Reiniciar trecho'),

@@ -63,3 +63,74 @@ Não foi medido tempo humano de primeira conclusão, nem desempenho em dispositi
 A build atual foi conferida no navegador em `http://127.0.0.1:18767/`: pausa, seletor com três capítulos, registros reais de tentativas interrompidas, carregamento de Galerias e Torre, seus fundos e diálogos próprios. Nenhum erro/warning de console foi observado nessa revisão. Capturas reais com tipografia de produção: `screenshots/v21_galleries_web.png` e `screenshots/v21_tower_web.png`. A travessia completa é evidência do harness de física, não foi repetida manualmente no navegador.
 
 O endereço antigo 18766 apresentou a build anterior por cache. A primeira tentativa de servidor dentro do sandbox não ficou acessível; o preview atual usa servidor Python fora do sandbox, limitado a 127.0.0.1. Não houve publicação externa. O build Web mantém o aviso não fatal preexistente sobre CupertinoIcons; os controles Material e a tipografia foram conferidos visualmente.
+
+## V2.2 — auditoria e base da atualização Legacy (30/10/2026)
+
+### Auditoria
+
+- Reutilizáveis: três mapas schema 3 com 21 IDs estáveis; seis animações do Errante; física, câmera, parallax, diálogos com retrato PNG RGBA, controles touch/teclado, `LevelProgress`, `AttemptClock`, `RunRecord` e `PlaySession`.
+- Dependências confirmadas no projeto: Flutter 3.38.9/Dart 3.10.8 e Flame 1.35.1. Não havia GoRouter nem `supabase_flutter` no `pubspec.yaml`; `supabase_flutter` 2.17.2 existe no cache. GoRouter não está no cache.
+- Lacunas: inicialização direta da fase; seleção provisória permite todas as fases; nenhum login, sessão, dados persistentes por usuário, menus de jogo, perfil, memórias ou settings; diálogo/progresso só vive na sessão; não há esquema de pontuação ou ranking.
+- Risco externo: o conector Supabase devolveu falta de permissão para o projeto indicado. O schema remoto e Auth settings não foram inspecionados; nenhuma migration remota foi aplicada. A chave pública e a URL foram colocadas em arquivo ignorado, mas ainda aguardam teste de correspondência e autenticação.
+- Ordem e critérios detalhados em `docs/ARCHITECTURE.md`, `docs/SUPABASE_SETUP.md` e `docs/TEST_PLAN.md`.
+
+### Implementado neste marco
+
+- Esquema local aditivo em `supabase/migrations/20261030120000_echoes_v22_legacy_update.sql`: catálogo das fases e 21 Ecos, memórias, conquistas, progresso por usuário, tentativas, recordes por versão, ledger de pontos idempotente, settings, RLS e RPCs autenticadas.
+- Catálogo educacional original dos 21 Ecos e uma interação com feedback por capítulo em `flutter_app/assets/narrative/memory_catalog.json`; tela de arquivo com filtro por capítulo, detalhes, fragmentos bloqueados e feedback; descoberta e aprovação de interação ficam apenas na sessão. Cada fase aborda fontes/memória, patrimônio material/imaterial e preservação participativa. O catálogo ainda reutiliza a ilustração do Eco e não há persistência remota.
+- Documentação criada/atualizada: desenho educacional e fontes IPHAN/UNESCO, regras de ranking, setup Supabase, plano de testes, auditoria arquitetural e README.
+- Configuração local Supabase ignorada pelo Git. A aplicação no banco segue pendente até revisar o schema existente com o responsável do projeto.
+
+### Validação e pendências
+
+Não foram confirmados testes ou build novos naquele primeiro marco. Esse estado foi sucedido pela recuperação abaixo; os limites remotos continuam explícitos.
+
+## V2.2 — Recovery & Completion, 30/10/2026 · validação final 06/11/2026
+
+### Ambiente recuperado e regressões
+
+Flutter 3.38.9/Dart 3.10.8 confirmados. Os comandos passaram pelo mecanismo normal de aprovação. A execução pelo cmd produziu saída; os processos sem saída no PowerShell foram abandonados. O baseline passou com 25 testes; dois avisos de RadioListTile foram corrigidos com RadioGroup. As dependências foram fixadas em Supabase Flutter 2.18.3, GoRouter 17.5.0, UUID 4.6.0 e Flame 1.35.1. O pub get final concluiu com exit code 0.
+
+A integração final passou em **36 testes Flutter** e o analyze terminou com **No issues found**. O teste de gameplay inicia o carregamento do Flame dentro de runAsync, conforme o harness de teste. O dropdown de memórias usa isExpanded; o cabeçalho adapta a marca a telas estreitas e o novo teste de 360×740 com escala de texto 1.6 passa pelas rotas de produto sem overflow. Chaves de blocos foram ajustadas conforme os lints.
+
+### Banco e segurança
+
+A migration existente foi revisada integralmente. Corrigidos: dupla contabilização dos pontos de Ecos na recompensa de conclusão, versão do Despertar (2), validações de nulos/versões/tempos/Ecos essenciais, início prévio de tentativa, submissão final única e acesso anônimo. Um lock transacional por usuário serializa recompensas. Wrappers públicos invoker chamam funções privilegiadas no schema private não exposto, com search_path vazio e auth.uid obrigatório. A view antiga deixou de ser API pública.
+
+Criados start-stage, coleta em tempo real, snapshot próprio e rankings PostgreSQL de pontos, Ecos, speedrun por fase e soma das três fases. Conquistas são derivadas no servidor. O seed educativo é gerado do catálogo original por supabase/tools/generate_memory_seed.py, que confirmou novamente os 21 IDs.
+
+**19 verificações PostgreSQL locais aprovadas**, usando PGlite 0.5.13, incluindo duas identidades simuladas, RLS, proibição de escrita livre em pontos/conquistas, repetição idempotente, melhor tempo/empate, versões incompatíveis, ranking combinado, privacidade de e-mail, memórias e settings. Script e relatório: supabase/qa/verify.mjs e report.json. Isso não é uma execução no Supabase hospedado nem um teste de Supabase Auth.
+
+Build Web final de produção concluído em `flutter_app/build/web` com config pública local; o Flutter emitiu o aviso não fatal de CupertinoIcons ausente no conjunto de fontes, enquanto MaterialIcons foi compilada. O `TEST_PLAN.md` registra os limites de build para Windows/Android e o roteiro remoto de duas contas.
+
+### Autenticação, produto e persistência
+
+lib/app/ contém contrato de backend, adaptador Supabase, modelos, controlador por conta, GoRouter, telas e widgets StageCard/ProgressCard/AchievementBadge/LeaderboardEntry/EchoButton. main.dart usa exclusivamente o backend real. Cadastro trata confirmação de e-mail; login valida credenciais; sessão é restaurada pelo SDK e revalidada; logout e expiração limpam dados privados. Recuperação depende do redirect permitido do projeto.
+
+Menu, seleção, missão com objetivo/status/recompensa, perfil, conquistas, ranking, preferências e memórias possuem comportamento. Nenhum array estático substitui jogadores do ranking. As preferências funcionais têm rascunho e gravação explícita; áudio inexistente não foi exposto.
+
+PlayRoute registra início, recebe os IDs de coleta do Flame e submete resultados com UUID. A fila é serial, em memória, com retry; snapshot só muda após confirmação. Geração de conta descarta respostas antigas, e cada tela de jogo captura seu proprietário para não enviar eventos de A na sessão B. A fila não é durável ao fechar o app ou sair. Continuar retoma capítulo, sem restaurar posição exata de sessão encerrada.
+
+História preserva pausas e diálogos. Speedrun omite diálogos automáticos e invalida recordes ao pausar/perder foco. Tempos monotônicos e versões acompanham as tentativas; todos os tempos de cliente continuam não verificados. Não existe validação autoritativa de física.
+
+Memórias do Reino preserva catálogo e interações originais; IDs desbloqueados e respostas passam pela conta/RPC. Retrato transparente e diálogo cinematográfico foram preservados. As memórias ainda compartilham o primeiro frame do asset existente; não foram produzidas ilustrações exclusivas.
+
+### Estado remoto e limite de conclusão
+
+A verificação pública de Auth respondeu: cadastro por e-mail habilitado e confirmação obrigatória. O conector recusou acesso administrativo; a introspecção REST também não foi disponibilizada à chave pública. O usuário confirmou estar sem acesso ao projeto remoto. **Nenhuma migration foi aplicada remotamente e nenhuma conta real foi criada/testada.**
+
+SUPABASE_SETUP.md contém preflight de leitura, ordem de aplicação manual, seed, permissões e redirects. O fluxo remoto de duas contas, os advisors do projeto e as políticas efetivamente hospedadas continuam pendentes do responsável. Não há aprovação de ferramenta pendente; a limitação é acesso externo. Não houve publicação, push, exclusão remota nem modificação do GDD original.
+
+### 06/11/2026 — diagnóstico de inicialização e SQL pronto para o Editor
+
+O comando bare `flutter run` não passa as variáveis `SUPABASE_URL` e `SUPABASE_ANON_KEY` no build. O arquivo local ignorado existe e corresponde ao host do projeto. Com `flutter run -d web-server --web-port 18769 --dart-define-from-file=config/supabase.local.json`, a aplicação iniciou e mostrou a tela de login; captura em `docs/screenshots/v22_flutter_run_login.png`. O fallback para configuração ausente agora exibe o comando correto e tem teste automatizado.
+
+Auth público respondeu HTTP 200 com cadastro não desabilitado, provider de e-mail habilitado e `mailer_autoconfirm=true`; nenhuma conta nem entrega de e-mail foi testada. Consulta REST de leitura a `public.stages` respondeu HTTP 404/PGRST205. O conector Supabase negou permissão administrativa para listar projeto, tabelas, histórico, logs e advisors; não houve mudança remota.
+
+Gerado `supabase/ECHOES_V2.2_FULL_SETUP.sql`, transação única com migration e catálogo seed. `supabase/tools/build_full_setup_sql.py` reproduz o bundle. A suíte PGlite usa o bundle completo e repetiu **19 verificações aprovadas**; preflight remoto ainda é necessário para comparar tabelas homônimas. A configuração de Auth (Site URL, redirects e confirmação) é ajustada no Dashboard, não por este SQL.
+
+### 06/11/2026 — `flutter run` sem argumentos de configuração
+
+A URL e a chave pública anon agora são padrões em `lib/app/supabase_config.dart`; `--dart-define` continua podendo sobrescrevê-las. Removida a mensagem que obrigava a passar `--dart-define-from-file`. `dart analyze` nos arquivos alterados terminou sem issues. `flutter run` chegou ao CLI mas esta máquina tinha três alvos (Windows, Chrome e Edge), então o Flutter pediu que um dispositivo fosse escolhido; `flutter run -d chrome` iniciou o app sem configuração extra do Supabase. Os flags de build também deixaram de depender do arquivo local ignorado.
+
+O dono confirmou a aplicação do SQL. Leituras públicas retornaram seed de `stages`, `collectibles`, `memory_entries`, `learning_checks` e `achievements`; acesso anônimo às tabelas privadas foi negado. Auth está com cadastro por e-mail ligado e confirmação automática. Ainda falta executar cadastro/login e RPCs autenticadas com uma conta real; o conector de administração permanece sem permissão.

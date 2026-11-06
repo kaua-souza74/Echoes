@@ -9,7 +9,12 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_web_plugins:
+    sdk: flutter
   flame: 1.35.1
+  supabase_flutter: 2.18.3
+  go_router: 17.5.0
+  uuid: 4.6.0
 
 dev_dependencies:
   flutter_test:
@@ -21,6 +26,7 @@ flutter:
   assets:
     - assets/levels/stage_01.json
     - assets/narrative/dialogues.json
+    - assets/narrative/memory_catalog.json
     - assets/images/narrative/memory_portrait.png
     - assets/images/player/errante_idle.png
     - assets/images/player/errante_run.png

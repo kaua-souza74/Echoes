@@ -1,13 +1,13 @@
-# ECHOES — O Despertar
+# ECHOES V2.2 — aplicativo Flutter/Flame
 
-Marco B/C da expansão V2: O Despertar com cinco seções, sete Ecos e diálogos com retrato transparente. Consulte `../docs/DEVELOPMENT_LOG.md` e `../docs/GAMEPLAY_HANDOFF.md` para estado real, física, assets, testes e limitações. As fases 2/3 e os sistemas online ainda não estão implementados.
+Três capítulos, Auth Supabase, GoRouter e telas de produto integradas. Consulte o [README principal](../README.md), o [setup Supabase](../docs/SUPABASE_SETUP.md) e o [plano de validação](../docs/TEST_PLAN.md).
 
 ```powershell
-flutter pub get
-flutter run -d windows
-# ou: flutter run -d chrome
+flutter run
 ```
 
-A/D ou setas: mover. Espaço: pulo variável. Shift: dash. Esc/P: pausa. R: retornar ao checkpoint. Os mesmos comandos estão nos botões de toque. Colete o Coração do Lume e alcance o farol final; explore desvios para encontrar os outros Ecos. No diálogo, Espaço/Enter/toque revelam e avançam; Esc/Pular encerra. Memórias vistas podem ser revistas na pausa durante a sessão.
+A URL e a chave pública anon do projeto ativo já vêm como padrões do app; `--dart-define` continua disponível para sobrescrevê-las. A chave pública é feita para uso no cliente e o banco aplica grants e RLS. A migration e o seed V2.2 já foram aplicados; Auth está com cadastro por e-mail habilitado e confirmação automática.
 
-Verificação: `flutter analyze` e `flutter test`. Compilação: `flutter build web` ou `flutter build windows`. O runner Android está preparado, mas o ambiente auditado precisa resolver licenças do SDK e a compatibilidade Java/Gradle antes de compilar para Android.
+A/D ou setas: mover; Espaço: pular; Shift: dash; Esc/P: pausa; R: checkpoint. Há controles de toque. No diálogo, Espaço/Enter/toque revelam e avançam. Speedrun invalida o recorde ao pausar ou perder foco. Tempos de cliente são não verificados.
+
+Build Web validado. Windows bloqueado pelo requisito de links simbólicos; Android não validado. O ZIP escolar contém apenas lib e pubspec e precisa dos assets e configuração do projeto completo.

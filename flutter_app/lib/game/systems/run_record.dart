@@ -43,16 +43,22 @@ class RunRecord {
     required this.deaths,
     required Set<String> collectibles,
     required this.completed,
+    this.mode = 'story',
+    this.eligible = true,
   }) : collectibles = Set.unmodifiable(collectibles);
   final int attemptId, stageVersion, durationMs, deaths;
   final String stageId;
   final Set<String> collectibles;
   final bool completed;
+  final String mode;
+  final bool eligible;
 }
 
 class PlaySession extends ChangeNotifier {
   final List<RunRecord> _results = [];
   final Set<String> viewedMemories = {};
+  final Set<String> discoveredCollectibles = {};
+  final Set<String> completedLearningChecks = {};
   int _serial = 0;
   int allocateAttempt() => ++_serial;
   List<RunRecord> get results => List.unmodifiable(_results);

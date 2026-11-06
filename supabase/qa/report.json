@@ -1,0 +1,26 @@
+{
+  "engine": "PGlite PostgreSQL; simulated auth.uid and two local users",
+  "remoteSupabaseValidated": false,
+  "passed": 19,
+  "checks": [
+    "complete SQL bundle executes on PostgreSQL",
+    "catalog keeps all 21 authored collectible IDs",
+    "all player tables enable RLS",
+    "independent bootstrap profiles",
+    "locked chapters and wrong map versions rejected",
+    "first Echo awards once and unlocks memory/achievement",
+    "arbitrary ledger and achievement writes forbidden",
+    "completion requires essential Echo and plausible duration",
+    "completion awards exactly stage reward plus unique Ecos",
+    "duplicate submission and replay cannot farm points",
+    "speedrun best keeps fastest and earliest tied run",
+    "incomplete attempt is excluded from personal bests",
+    "cross-account private rows and writes are denied",
+    "ranking uses real aggregate totals, stable ties, and no emails",
+    "combined ranking requires all three current versions",
+    "learning feedback persists per account",
+    "settings persist and remain independent",
+    "client runs remain explicitly unverified",
+    "anonymous RPC and private view access forbidden"
+  ]
+}

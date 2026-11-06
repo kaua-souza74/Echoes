@@ -7,7 +7,8 @@ import 'camera_controller.dart';
 /// Camera-displacement based layers, independent of frame rate and direction.
 /// Mirrored repetition joins identical border pixels without uncovered gaps.
 class ParallaxBackdrop extends Component {
-  ParallaxBackdrop(this.assets, this.rig);
+  ParallaxBackdrop(this.assets, this.rig, {this.reduceEffects = false});
+  final bool reduceEffects;
   final GameAssets assets;
   final FollowCamera rig;
   double _ambientTime = 0;
@@ -31,6 +32,15 @@ class ParallaxBackdrop extends Component {
   void render(Canvas canvas) {
     final paint = GameAssets.pixelPaint();
     for (final layer in assets.level.layers) {
+      if (reduceEffects &&
+          [
+            'breathing_fog',
+            'lume_shafts',
+            'wind_haze',
+            'silver_mist',
+          ].any(layer.asset.contains)) {
+        continue;
+      }
       final image = assets.image(layer.asset);
       final width = image.width.toDouble();
       final height = image.height.toDouble();
@@ -53,6 +63,7 @@ class ParallaxBackdrop extends Component {
         }
       }
     }
+    if (reduceEffects) return;
     _drawAmbientLife(canvas, paint);
     for (final event in assets.level.ambientEvents) {
       final age = eventAges[event.id];

@@ -1,5 +1,9 @@
 # ECHOES — Handoff de gameplay
 
+## Atualização V2.2
+
+O entrypoint agora é Supabase + AppController + GoRouter; a aplicação não inicia mais WorldFlowScreen. PlayRoute integra callbacks de coleta e tentativas ao backend. Modo História preserva os diálogos; Speedrun omite conversas automáticas e invalida recorde em pausa/perda de foco. Preferências chegam à velocidade de fala, HUD e efeitos. Leia ARCHITECTURE.md, SUPABASE_SETUP.md e TEST_PLAN.md para o estado atual. As seções B/C abaixo são histórico da implementação anterior, incluindo suas antigas pendências de backend.
+
 ## Expansão V2 — marco B/C
 
 O jogo padrão agora carrega `assets/levels/stage_01.json`: 11.776×1.024 px, 34 superfícies principais, 20 opcionais, cinco checkpoints e sete Ecos. O Coração (`echo_heart`) é exigido na conclusão; os outros são opcionais. Cinco regiões: O Primeiro Suspiro, Ruínas Silenciosas, A Ponte Esquecida, O Coração Adormecido e A Passagem. O farol final está em `(11552,320)`.

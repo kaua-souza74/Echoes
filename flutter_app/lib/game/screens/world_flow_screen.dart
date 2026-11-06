@@ -3,6 +3,8 @@ import '../echoes_game.dart';
 import '../levels/stage_registry.dart';
 import '../systems/run_record.dart';
 import 'game_screen.dart';
+import '../../narrative/memory_catalog.dart';
+import '../../narrative/memories_screen.dart';
 
 class WorldFlowScreen extends StatefulWidget {
   const WorldFlowScreen({super.key});
@@ -14,8 +16,10 @@ class _WorldFlowScreenState extends State<WorldFlowScreen> {
   final session = PlaySession();
   String stageId = 'stage_01';
   bool choosing = false;
+  bool viewingMemories = false;
   int generation = 0;
   late EchoesGame game = EchoesGame(stageId: stageId, session: session);
+  late final Future<MemoryCatalog> memoryCatalog = MemoryCatalog.load();
   void open(String id) {
     setState(() {
       stageId = id;
@@ -39,6 +43,38 @@ class _WorldFlowScreenState extends State<WorldFlowScreen> {
         onNextStage: next == null ? null : () => open(next),
       );
     }
+    if (viewingMemories) {
+      return FutureBuilder<MemoryCatalog>(
+        future: memoryCatalog,
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Scaffold(
+              body: Center(
+                child: Text(
+                  'Não foi possível abrir as memórias: ${snapshot.error}',
+                ),
+              ),
+            );
+          }
+          if (!snapshot.hasData) {
+            return const Scaffold(
+              body: Center(child: CircularProgressIndicator()),
+            );
+          }
+          return MemoriesScreen(
+            catalog: snapshot.data!,
+            unlockedCollectibleIds: Set.unmodifiable(
+              session.discoveredCollectibles,
+            ),
+            completedLearningCheckIds: Set.unmodifiable(
+              session.completedLearningChecks,
+            ),
+            onLearningCheckPassed: session.completedLearningChecks.add,
+            onClose: () => setState(() => viewingMemories = false),
+          );
+        },
+      );
+    }
     return Scaffold(
       body: Center(
         child: SingleChildScrollView(
@@ -49,6 +85,12 @@ class _WorldFlowScreenState extends State<WorldFlowScreen> {
               const Text('ECHOES · Capítulos', style: TextStyle(fontSize: 26)),
               const SizedBox(height: 12),
               const Text('Seleção provisória · resultados desta sessão'),
+              const SizedBox(height: 10),
+              OutlinedButton.icon(
+                onPressed: () => setState(() => viewingMemories = true),
+                icon: const Icon(Icons.auto_stories),
+                label: const Text('Memórias do Reino'),
+              ),
               for (final stage in StageRegistry.stages)
                 Padding(
                   padding: const EdgeInsets.all(8),

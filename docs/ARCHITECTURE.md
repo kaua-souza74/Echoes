@@ -1,33 +1,43 @@
-# Arquitetura atual
+# Arquitetura ECHOES V2.2
 
-`main.dart` inicia `GameScreen`. A tela hospeda `GameWidget`, HUD, touch, pausa/conclusão e o overlay narrativo. `EchoesGame` coordena componentes, física e eventos; `MovementController` continua independente de Flutter e dos dados persistidos.
+## Aplicativo
 
-## Dados de fase
+main.dart valida configuração pública de build, inicializa Supabase e cria AppController. EchoesApplication mantém GoRouter com splash, login, cadastro, recuperação de senha, menu, fases, missão, gameplay, speedrun, conquistas, ranking, memórias, perfil e configurações. Rotas privadas exigem identidade autenticada; IDs inválidos e caminhos desconhecidos têm retorno seguro.
 
-`LevelData.fromStageJson` interpreta dimensões, spawn, retângulos sólidos, props com IDs estáveis, seções, layers, Ecos exigidos e gatilhos narrativos. O arquivo de fase atual é `assets/levels/stage_01.json`. O parser artístico legado continua disponível para o teste do slice.
+A sessão persistida pelo SDK é revalidada por getUser ao restaurar. EchoesBackend é o contrato; SupabaseBackend é a única implementação usada em produção. O fake está restrito a test/support/.
 
-Colisões usam apenas `solids`; sprites, colunas e animais do fundo não geram colisores. `RuinsLevel` prepara tiles uma vez e filtra sua renderização pelos limites da câmera. `GameAssets` pré-carrega as imagens utilizadas, mantendo os assets do Art Pass 2.
+## Conta e sincronização
+
+AppController guarda um snapshot do servidor e uma geração de conta. Trocar identidade limpa snapshot e fila; respostas de gerações antigas são ignoradas. PlayRoute captura também o proprietário da tentativa, impedindo envio de uma fase antiga na sessão seguinte.
+
+Escritas são serializadas e identificadas por IDs estáveis. Erros deixam operações pendentes para repetir na mesma sessão. Pontos e desbloqueios permanentes só aparecem no snapshot depois da confirmação do servidor. O HUD representa a tentativa local. Não há fila offline durável: fechar o app ou sair descarta operações ainda pendentes.
+
+Preferências têm rascunho e botão Salvar. Escala de texto é aplicada ao app; velocidade dos diálogos, cronômetro e redução de efeitos chegam ao jogo. Não existem controles de áudio para sistemas inexistentes.
+
+## Flame
+
+PlayRoute registra o início autenticado antes de criar EchoesGame. UUID identifica a tentativa no banco; PlaySession continua deduplicando registros locais. Coleta emite o ID original do Eco. Concluir, reiniciar ou abandonar produz no máximo um resultado por tentativa. O jogo não importa Supabase; callbacks são adaptados pela tela Flutter.
+
+Física, mapas, câmera, temporárias, animações e assets anteriores foram mantidos. História congela física/relógio durante conversas e persiste IDs vistos inclusive ao pular. Speedrun omite conversas automáticas. AttemptClock usa Stopwatch monotônico; pausa/perda de foco invalida recorde, reinício cria outra tentativa.
+
+Continuar retoma o capítulo disponível, sem restaurar a posição exata de uma sessão encerrada. Checkpoints continuam funcionando dentro da tentativa.
+
+## Banco
+
+Versões atuais: stage_01=2, stage_02=1, stage_03=1. Os 21 IDs originais não mudaram. StageRegistry carrega os mapas; StagePresentation descreve objetivos, dificuldade, categoria e recompensa.
+
+score_ledger tem unicidade por usuário/origem/ID. Locks transacionais por usuário serializam recompensas. Primeira conclusão: 100 pontos; Eco único: 10. O cliente não envia pontuação total.
+
+Wrappers públicos SECURITY INVOKER chamam funções SECURITY DEFINER no schema não exposto private. As funções usam search_path vazio, validam auth.uid, entrada, início, desbloqueio e versão. Grants de tabela são revogados antes das permissões mínimas; atualização direta é limitada a preferências e apelido próprios. RLS protege os demais dados.
+
+Rankings são agregados PostgreSQL. Retornam Top 100 e a posição do próprio usuário, projetando somente UUID público, apelido, posição e resultado. E-mails ficam no Auth. Recordes são separados por versão e marcados não verificados: não existe simulação autoritativa do cliente.
 
 ## Narrativa
 
-`DialogueController` carrega as sequências de `assets/narrative/dialogues.json`. Seu estado contém sequência, linha, número de caracteres e IDs vistos na sessão. `DialogueOverlay`, `DialoguePanel`, `SpeakerPortrait` e `DialogueControls` desenham a interface responsiva sobre o Flame. O teclado é tratado antes da entrada de movimento; o overlay captura toque e os controles de movimento são ocultados durante a sequência.
+assets/narrative/memory_catalog.json continua a fonte dos 21 textos e três interações. supabase/tools/generate_memory_seed.py confere os mapas e gera o seed SQL. A tela lê conteúdo local, desbloqueando somente os IDs da conta; respostas aguardam confirmação por RPC.
 
-O controlador rejeita sobrescrever um diálogo ativo. Fechar ou pular registra a sequência na sessão; `replay: true` permite rever uma memória na pausa. A futura camada de persistência deverá salvar os IDs vistos por usuário, sem acoplar chamadas de rede ao ticker de texto ou à física.
+DialogueController/Overlay/Panel/SpeakerPortrait foram preservados. O retrato PNG RGBA continua sobrepondo a borda. As memórias usam o primeiro frame do fragmento existente; ilustrações exclusivas são melhoria artística pendente.
 
-## Progresso e próximos módulos
+## Verificação
 
-`LevelProgress` ainda é local: checkpoint, mortes, conjunto idempotente de Ecos e conclusão. O método de conclusão recebe os IDs exigidos pela fase. Não há pontuação persistida nem operações de ranking. Auth/repositórios/GoRouter serão adicionados na etapa de navegação e backend; a simulação continuará independente deles.
-
-
-## V2.1 — mundos integrados (estado atual)
-`main.dart` inicia `WorldFlowScreen`, que possui `PlaySession` e troca `GameScreen` por uma chave nova a cada capítulo. `StageRegistry` é o catálogo autorizado: 01 → 02 → 03. Todos estão acessíveis no seletor provisório da pausa. O botão Próximo capítulo aparece após concluir 01/02; 03 encerra o primeiro arco.
-
-`EchoesGame(stageId: ...)` passa o ID a `GameAssets`, que carrega o JSON e o atlas indicados pelo mapa. Cada instância recebe novos jogador, câmera, fragmentos, faróis, plataformas e backdrop. O descarte chama `shutdown`, interrompe entrada/engine e registra uma tentativa interrompida somente se ela começou; o resultado concluído não é duplicado. O teste de transição confere isolamento e preservação da sessão.
-
-Schema 3 aceita sólidos com ID, plataformas temporárias, regiões em X/Y, fatores XY de parallax, câmera e eventos ambientais. O parser mantém compatibilidade com os retângulos em arrays do Despertar. O conteúdo `route`/`shafts` é metadado de autoria e QA, sem conduzir o jogador no aplicativo.
-
-`TemporaryPlatforms` fornece a lista efetiva de colisores. Após apoio, a plataforma pulsa, rompe em 1,1 s e reaparece após 3 s; o retorno é adiado se o corpo ocupar seu volume. Diálogos/pausa congelam esse relógio. Reinício restaura todas. O renderer recorta a última célula de paredes de altura não múltipla de 32 para coincidir com o colisor.
-
-`AttemptClock` usa Stopwatch monotônico, começa na primeira simulação e exclui loading, pausa e diálogos. `RunRecord` copia o conjunto de coletáveis e contém attemptId local, stageId, stageVersion, durationMs, deaths, collectibles, completed. `PlaySession` deduplica por attemptId e preserva memórias entre capítulos. Tudo vive em RAM; fechar/recarregar perde dados. Esse tempo de história não é prova competitiva de speedrun; a política futura deverá decidir tratamento de diálogos e validação no servidor.
-
-As layers são repetidas com espelhamento XY; atores e eventos do backdrop não têm colisores. Texturas são carregadas pelo cache; tiles são preparados no onLoad e descartados fora do viewport. Poeira tem 26 pontos fixos, rastros/FX removem-se ao terminar. Não há rede nesta integração.
+Há regressões de física/travessia e testes de produto com backend simulado. PGlite executa PostgreSQL local para testar a migration, RLS, pontos, recordes, rankings e duas identidades locais. Isso não substitui Supabase Auth nem o fluxo remoto com duas contas confirmadas. Resultados exatos em TEST_PLAN.md.
