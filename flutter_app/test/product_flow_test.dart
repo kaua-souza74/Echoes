@@ -31,7 +31,9 @@ void main() {
     final app = AppController(backend);
     await tester.pumpWidget(EchoesApplication(controller: app));
     await frames(tester);
-    final router = GoRouter.of(tester.element(find.text('Bem-vindo, Voz A.')));
+    final router = GoRouter.of(
+      tester.element(find.text('Bem-vindo ao Vale, viajante.')),
+    );
     for (final route in [
       '/stages',
       '/stages/stage_01',
@@ -64,7 +66,7 @@ void main() {
       await tester.pumpWidget(EchoesApplication(controller: app));
       await frames(tester);
       final router = GoRouter.of(
-        tester.element(find.text('Bem-vindo, Voz A.')),
+        tester.element(find.text('Bem-vindo ao Vale, viajante.')),
       );
       late GameScreen screen;
       await tester.runAsync(() async {
@@ -125,7 +127,10 @@ void main() {
       await tester.enterText(find.byType(TextFormField).at(1), 'test-pass');
       await tester.tap(find.text('Entrar'));
       await frames(tester);
-      expect(find.text('Bem-vindo, Voz A.'), findsOneWidget);
+      expect(find.text('O primeiro eco'), findsOneWidget);
+      await tester.tap(find.text('Pular tutorial'));
+      await frames(tester);
+      expect(find.text('Bem-vindo ao Vale, viajante.'), findsOneWidget);
       router.go('/stages/stage_03');
       await frames(tester);
       expect(

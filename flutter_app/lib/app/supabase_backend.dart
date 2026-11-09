@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'backend.dart';
 import 'models.dart';
@@ -19,9 +21,9 @@ class SupabaseBackend implements EchoesBackend {
   @override
   Stream<PlayerIdentity?> get authChanges =>
       client.auth.onAuthStateChange.map((state) {
-      if (state.event == AuthChangeEvent.passwordRecovery) {
+        if (state.event == AuthChangeEvent.passwordRecovery) {
           passwordRecovery = true;
-      }
+        }
         return state.session == null || state.session!.isExpired
             ? null
             : _identity(state.session!.user);
@@ -171,6 +173,31 @@ bool isSessionError(Object error) =>
 String friendlyError(Object error) {
   if (isSessionError(error)) return 'Sua sessão terminou. Entre novamente.';
   if (error is BackendFailure) return error.message;
+  if (error is TimeoutException) {
+    return 'A conexão demorou mais que o esperado. Tente novamente.';
+  }
+  final diagnostic = error.toString().toLowerCase();
+  if (diagnostic.contains('failed host lookup') ||
+      diagnostic.contains('socketexception') ||
+      diagnostic.contains('connection refused') ||
+      diagnostic.contains('network is unreachable') ||
+      diagnostic.contains('connection reset')) {
+    return 'Não foi possível alcançar o Supabase. Confira a internet e se o projeto continua ativo.';
+  }
+  if (error is PostgrestException) {
+    final code = error.code ?? 'sem código';
+    final message = error.message.trim();
+    if (code == 'PGRST202' || code == '42883') {
+      return 'O Supabase não encontrou uma função necessária ($code). Confira se o SQL foi aplicado neste projeto e se a API atualizou o schema. $message';
+    }
+    if (code == '42P01' || code == '42703') {
+      return 'O banco está sem uma tabela ou coluna esperada ($code). Confira a migration aplicada. $message';
+    }
+    if (code == '42501') {
+      return 'O banco recusou esta operação ($code). Confira as permissões e políticas RLS da conta. $message';
+    }
+    return 'Falha no Supabase ($code): $message';
+  }
   if (error is AuthException) {
     final text = error.message.toLowerCase();
     if (text.contains('invalid login')) return 'E-mail ou senha incorretos.';
@@ -183,7 +210,7 @@ String friendlyError(Object error) {
     if (text.contains('rate limit')) {
       return 'Muitas tentativas. Aguarde um pouco e tente novamente.';
     }
-    return 'Não foi possível concluir o acesso. Confira os dados e tente novamente.';
+    return 'Falha no Supabase Auth${error.statusCode == null ? '' : ' (${error.statusCode})'}: ${error.message}';
   }
-  return 'Não foi possível conectar. Seu progresso só será marcado como salvo após confirmação. Tente novamente.';
+  return 'Não foi possível conectar. Seu progresso só será marcado como salvo após confirmação. Tente novamente. (${error.runtimeType})';
 }

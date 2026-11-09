@@ -2,7 +2,7 @@
   "schema": 3,
   "id": "stage_02",
   "title": "Galerias Quebradas",
-  "version": 1,
+  "version": 2,
   "width": 8448,
   "height": 2304,
   "solids": [
@@ -254,6 +254,10 @@
       "break_after": 1.1,
       "recover_after": 3
     }
+  ],
+  "breakables": [
+    {"id": "sandstone_seal_01", "x": 1232, "y": 1536, "width": 56, "height": 64, "material": "sandstone", "hits": 2},
+    {"id": "sandstone_seal_02", "x": 6384, "y": 832, "width": 56, "height": 64, "material": "sandstone", "hits": 2}
   ],
   "props": [
     {
@@ -548,14 +552,14 @@
   ],
   "ambient_actors": [
     {
-      "sprite": "moth",
+      "sprite": "dust_moth",
       "x": 130,
       "y": 100,
       "factor": 0.12,
       "opacity": 0.5
     },
     {
-      "sprite": "crawler",
+      "sprite": "dune_crawler",
       "x": 490,
       "y": 220,
       "factor": 0.32,
@@ -566,7 +570,7 @@
     {
       "id": "colossus",
       "kind": "crossing",
-      "sprite": "colossus",
+      "sprite": "sand_colossus",
       "x": 3296,
       "y": 800,
       "width": 700,

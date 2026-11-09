@@ -1,4 +1,4 @@
-enum InputAction { left, right, jump, dash }
+enum InputAction { left, right, jump, dash, attack }
 
 class InputFrame {
   const InputFrame({
@@ -7,16 +7,20 @@ class InputFrame {
     this.jumpPressed = false,
     this.jumpReleased = false,
     this.dashPressed = false,
+    this.attackPressed = false,
   });
   final double axis;
-  final bool jumpHeld, jumpPressed, jumpReleased, dashPressed;
+  final bool jumpHeld, jumpPressed, jumpReleased, dashPressed, attackPressed;
 }
 
 /// Keyboard and touch are combined before detecting edges. Edges survive a
 /// render frame with no physics tick and are consumed once by the fixed step.
 class GameInput {
   final Set<InputAction> _keyboard = {}, _touch = {};
-  bool _jumpPressed = false, _jumpReleased = false, _dashPressed = false;
+  bool _jumpPressed = false,
+      _jumpReleased = false,
+      _dashPressed = false,
+      _attackPressed = false;
 
   bool _held(InputAction action) =>
       _keyboard.contains(action) || _touch.contains(action);
@@ -35,11 +39,13 @@ class GameInput {
   void _change(void Function() mutate) {
     final jumpBefore = _held(InputAction.jump);
     final dashBefore = _held(InputAction.dash);
+    final attackBefore = _held(InputAction.attack);
     mutate();
     final jumpAfter = _held(InputAction.jump);
     _jumpPressed |= !jumpBefore && jumpAfter;
     _jumpReleased |= jumpBefore && !jumpAfter;
     _dashPressed |= !dashBefore && _held(InputAction.dash);
+    _attackPressed |= !attackBefore && _held(InputAction.attack);
   }
 
   InputFrame consume() {
@@ -51,14 +57,15 @@ class GameInput {
       jumpPressed: _jumpPressed,
       jumpReleased: _jumpReleased,
       dashPressed: _dashPressed,
+      attackPressed: _attackPressed,
     );
-    _jumpPressed = _jumpReleased = _dashPressed = false;
+    _jumpPressed = _jumpReleased = _dashPressed = _attackPressed = false;
     return frame;
   }
 
   void clear() {
     _keyboard.clear();
     _touch.clear();
-    _jumpPressed = _jumpReleased = _dashPressed = false;
+    _jumpPressed = _jumpReleased = _dashPressed = _attackPressed = false;
   }
 }

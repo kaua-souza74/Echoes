@@ -11,6 +11,7 @@ import '../narrative/memories_screen.dart';
 import 'app_controller.dart';
 import 'screens.dart';
 import 'supabase_backend.dart';
+import 'tutorial_screen.dart';
 import 'widgets.dart';
 
 String? authRedirect({
@@ -26,7 +27,8 @@ String? authRedirect({
   if (passwordRecovery) {
     return location == '/reset-password' ? null : '/reset-password';
   }
-  if (access || location == '/splash' || location == '/') return '/menu';
+  if (access) return '/intro';
+  if (location == '/splash' || location == '/') return '/menu';
   return null;
 }
 
@@ -69,6 +71,22 @@ class _EchoesApplicationState extends State<EchoesApplication> {
       GoRoute(
         path: '/register',
         builder: (_, _) => AuthScreen(widget.controller, register: true),
+      ),
+      GoRoute(
+        path: '/intro',
+        builder: (context, _) => EchoTutorialScreen(
+          guide: false,
+          reduceEffects: widget.controller.player.settings.reduceEffects,
+          onFinish: () => context.go('/menu'),
+        ),
+      ),
+      GoRoute(
+        path: '/guide',
+        builder: (context, _) => EchoTutorialScreen(
+          guide: true,
+          reduceEffects: widget.controller.player.settings.reduceEffects,
+          onFinish: () => context.go('/menu'),
+        ),
       ),
       GoRoute(path: '/menu', builder: (_, _) => MenuScreen(widget.controller)),
       GoRoute(
@@ -397,43 +415,46 @@ class _PlayRouteState extends State<PlayRoute> {
           onChooseStage: () =>
               context.go(widget.speedrun ? '/speedrun' : '/stages'),
           onRestart: _begin,
+          onExitToMenu: () => context.go('/menu'),
           onNextStage: next != null && widget.controller.player.unlocked(next)
               ? () => context.go('/stages/$next')
               : null,
         ),
-        Positioned(
-          top: 74,
-          left: 12,
-          right: 12,
-          child: SafeArea(
-            child: Align(
-              alignment: Alignment.topCenter,
-              child: Material(
-                color: const Color(0xc0080e19),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 3,
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        widget.controller.syncStatus,
-                        style: const TextStyle(color: lume, fontSize: 11),
-                      ),
-                      if (widget.controller.pendingCount > 0)
-                        TextButton(
-                          onPressed: widget.controller.retryPending,
-                          child: const Text('Tentar salvar'),
+        if (widget.controller.syncStatus != 'Salvo' ||
+            widget.controller.pendingCount > 0)
+          Positioned(
+            top: 74,
+            left: 12,
+            right: 12,
+            child: SafeArea(
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: Material(
+                  color: const Color(0xc0080e19),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 3,
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          widget.controller.syncStatus,
+                          style: const TextStyle(color: lume, fontSize: 11),
                         ),
-                    ],
+                        if (widget.controller.pendingCount > 0)
+                          TextButton(
+                            onPressed: widget.controller.retryPending,
+                            child: const Text('Tentar salvar'),
+                          ),
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
           ),
-        ),
       ],
     );
   }

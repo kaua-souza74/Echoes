@@ -53,38 +53,42 @@ As seis folhas usam quadros desenhados individualmente. Não há estados `land` 
 
 As referências fornecidas estão apenas em `References/`; não são copiadas para o bundle.
 
-## Estudos das áreas futuras
+## Mundos 02 e 03 — camadas integradas
 
-Cada layer abaixo mede 640×360 px; os arquivos `*_visual_study.png` são composições para revisão e não entram no bundle atual.
+Cada layer abaixo mede 640×360 px e já é carregada pelo mapa correspondente. As composições visual study também ilustram o capítulo atual no painel do menu; não são camadas de jogo.
 
 | Área | Assets-base | Direção |
 |---|---|---|
-| Galerias Quebradas | `parallax/stage_02/01_petroil_void.png`, `02_suspended_galleries.png`, `03_chains_and_windbreaks.png`; `stage_02_visual_study.png` | abismo ventilado, pontes partidas, pilares altos, correntes e ferro apagado |
-| Torre do Eco | `parallax/stage_03/01_indigo_aperture.png`, `02_echo_tower.png`, `03_shattered_lancets.png`; `stage_03_visual_study.png` | eixo vertical sagrado, lancetas, vidro quebrado lateral, ciano prateado e ouro escasso |
+| Galerias Quebradas | `parallax/stage_02/01_petroil_void.png`, `02_suspended_galleries.png`, `03_chains_and_windbreaks.png`, `04_wind_haze.png`; `stage_02_visual_study.png` | galerias soterradas por dunas, arenito recortado pelo vento, correntes antigas e luz ocre |
+| Torre do Eco | `parallax/stage_03/01_indigo_aperture.png`, `02_echo_tower.png`, `03_shattered_lancets.png`, `04_silver_mist.png`; `stage_03_visual_study.png` | torre vertical retomada por raízes, pedra musgosa, copas verde-escuras e feixes suaves |
 
-Esses seis PNGs de camadas ainda não são carregados pelo jogo. São bases originais para composição e podem ser registrados em um layout futuro.
+O atlas de cada fase usa células 32×32 px. A camada 02 preserva as silhuetas arquitetônicas; a 03 concentra vegetação, correntes e detalhes próximos; a 04 contém poeira e feixes de baixa opacidade.
 
 
-## V2.1 — pacote de mundos integrado
-Origem autoral procedural: `art_pipeline/scripts/build_world_expansion.py`; os seis fundos-base vêm do `generate_art_pass2.py`. Todos foram abertos e conferidos; dimensões/alfa completos em `art_pipeline/world_asset_review.json`.
+## V2.2 — pacote de mundos atualizado
+Origem autoral procedural: `art_pipeline/scripts/build_world_expansion.py` para os mapas e `art_pipeline/scripts/generate_biome_expansion.py` para as novas paletas, camadas e criaturas. O segundo script usa apenas a biblioteca padrão do Python e escreve PNG RGBA. Os assets gerados foram abertos e conferidos.
 
 | Arquivo em assets/images | Dimensão | Frames/célula/FPS |
 |---|---:|---|
-| tilesets/stage_02_ruins_tiles.png + .json | 256×160 | 40 tiles 32×32, atlas metálico |
-| tilesets/stage_03_ruins_tiles.png + .json | 256×160 | 40 tiles 32×32, atlas de pedra |
+| tilesets/stage_02_ruins_tiles.png + .json | 256×160 | 40 tiles 32×32, arenito de camadas e desgaste âmbar |
+| tilesets/stage_03_ruins_tiles.png + .json | 256×160 | 40 tiles 32×32, pedra verde com líquen e raízes |
 | parallax/stage_02/01_petroil_void.png | 640×360 | base opaca |
 | parallax/stage_02/02_suspended_galleries.png | 640×360 | arquitetura RGBA |
 | parallax/stage_02/03_chains_and_windbreaks.png | 640×360 | correntes e sombras RGBA |
-| parallax/stage_02/04_wind_haze.png | 640×360 | névoa, alfa máximo 16/255 |
-| parallax/stage_03/01_indigo_aperture.png | 640×360 | base opaca |
+| parallax/stage_02/04_wind_haze.png | 640×360 | poeira dourada, pixels soltos e rastros de vento |
+| parallax/stage_03/01_indigo_aperture.png | 640×360 | base opaca, copa de floresta e abertura de luz |
 | parallax/stage_03/02_echo_tower.png | 640×360 | torre/lancetas RGBA |
-| parallax/stage_03/03_shattered_lancets.png | 640×360 | vidro e cristais RGBA |
-| parallax/stage_03/04_silver_mist.png | 640×360 | névoa/feixes, alfa máximo 16/255 |
+| parallax/stage_03/03_shattered_lancets.png | 640×360 | vinhas, folhas e sementes luminosas RGBA |
+| parallax/stage_03/04_silver_mist.png | 640×360 | névoa verde e feixes atmosféricos RGBA |
 | background_creatures/worlds/crawler.png | 320×40 | 4 / 80×40 / 3 |
 | background_creatures/worlds/spirit.png | 256×80 | 4 / 64×80 / 3 |
 | background_creatures/worlds/colossus.png | 1280×144 | 4 / 320×144 / 2 |
+| background_creatures/worlds/dust_moth.png | 256×48 | 4 / 64×48 / 3,5 |
+| background_creatures/worlds/dune_crawler.png | 320×40 | 4 / 80×40 / 2,8 |
+| background_creatures/worlds/sand_colossus.png | 1280×144 | 4 / 320×144 / 2 |
+| background_creatures/worlds/forest_wisp.png | 256×80 | 4 / 64×80 / 3 |
 
-Os dois atlas são opacos; todas as criaturas têm pixels transparentes e frames não vazios. Cada strip repete a pose neutra no terceiro quadro, com três poses distintas. Props, retrato, FX e protagonista existentes são compartilhados sem alterar escala/pivô. Os JSONs executáveis são `assets/levels/stage_02.json` e `stage_03.json`; há dez novas sequências no arquivo narrativo compartilhado, totalizando 14.
+Os dois atlas são opacos; todas as criaturas têm pixels transparentes e frames não vazios. As fases 02/03 usam criaturas e partículas em cores locais. Props, retrato, FX e protagonista existentes são compartilhados sem alterar escala/pivô. Os mapas carregam os seus respectivos fundos e atlas.
 
 
 Capturas de produção V2.1: `screenshots/v21_galleries_web.png` e `screenshots/v21_tower_web.png`; ambas conferidas no navegador. As capturas regionais `stage_02_*`/`stage_03_*` são do harness de testes e usam fonte Ahem.

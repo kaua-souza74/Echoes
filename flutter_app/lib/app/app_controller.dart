@@ -6,6 +6,8 @@ import 'models.dart';
 import 'supabase_backend.dart' show friendlyError, isSessionError;
 
 class AppController extends ChangeNotifier {
+  static const _requestTimeout = Duration(seconds: 12);
+
   AppController(this.backend) {
     _auth = backend.authChanges.listen(
       (user) {
@@ -43,7 +45,7 @@ class AppController extends ChangeNotifier {
     startupError = null;
     notifyListeners();
     try {
-      final user = await backend.restoreSession();
+      final user = await backend.restoreSession().timeout(_requestTimeout);
       await _switchUser(user);
     } catch (error) {
       startupError = friendlyError(error);
@@ -72,7 +74,7 @@ class AppController extends ChangeNotifier {
     loading = true;
     notifyListeners();
     try {
-      final result = await backend.loadPlayer();
+      final result = await backend.loadPlayer().timeout(_requestTimeout);
       if (_disposed || epoch != _epoch) return;
       player = result;
       errorMessage = null;
@@ -95,12 +97,14 @@ class AppController extends ChangeNotifier {
   }
 
   Future<void> login(String email, String password) async {
-    final user = await backend.login(email, password);
+    final user = await backend.login(email, password).timeout(_requestTimeout);
     if (identity?.id != user.id) await _switchUser(user);
   }
 
   Future<bool> register(String nickname, String email, String password) async {
-    final user = await backend.register(nickname, email, password);
+    final user = await backend
+        .register(nickname, email, password)
+        .timeout(_requestTimeout);
     if (user != null && identity?.id != user.id) await _switchUser(user);
     return user != null;
   }
@@ -130,7 +134,9 @@ class AppController extends ChangeNotifier {
       throw const BackendFailure('Sua sessão terminou. Entre novamente.');
     }
     try {
-      await backend.startStage(runId, stageId, version, mode);
+      await backend
+          .startStage(runId, stageId, version, mode)
+          .timeout(_requestTimeout);
     } catch (error) {
       if (isSessionError(error)) {
         try {

@@ -15,6 +15,8 @@ flutter run
 
 A URL e a chave pública anon do Supabase do projeto estão incluídas como padrões do cliente, então não é necessário passar argumentos adicionais. `--dart-define` ainda pode sobrescrever esses valores. A chave é pública por projeto; os grants e as políticas RLS limitam o acesso às tabelas privadas. O SQL foi aplicado e a API pública já respondeu com os dados de catálogo do seed. O Auth permite cadastro por e-mail e está configurado com confirmação automática; o fluxo completo de cadastro/login ainda precisa ser exercitado no app.
 
+Após cada login, o prólogo do Vale é narrado visualmente pelo Lume e pode ser pulado. O menu mantém o **Guia de primeiros passos** disponível a qualquer momento. A animação não usa áudio.
+
 ## Jogar
 
 A/D ou setas: mover. Espaço: salto variável. Shift: dash. R: checkpoint. Empurre uma parede para deslizar e pule para sair. Há controles de toque. Espaço/Enter/toque revelam e avançam diálogos; Esc/Pular encerra a conversa. O retrato transparente foi preservado.

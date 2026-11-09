@@ -2,7 +2,7 @@
   "schema": 3,
   "id": "stage_03",
   "title": "Torre do Eco",
-  "version": 1,
+  "version": 2,
   "width": 2560,
   "height": 5632,
   "solids": [
@@ -415,6 +415,10 @@
       "break_after": 1.1,
       "recover_after": 3
     }
+  ],
+  "breakables": [
+    {"id": "heartwood_seal_01", "x": 2040, "y": 5056, "width": 56, "height": 64, "material": "heartwood", "hits": 2},
+    {"id": "heartwood_seal_02", "x": 1536, "y": 4352, "width": 56, "height": 64, "material": "heartwood", "hits": 2}
   ],
   "props": [
     {
@@ -835,14 +839,14 @@
   ],
   "ambient_actors": [
     {
-      "sprite": "spirit",
+      "sprite": "forest_wisp",
       "x": 170,
       "y": 115,
       "factor": 0.08,
       "opacity": 0.58
     },
     {
-      "sprite": "spirit",
+      "sprite": "forest_wisp",
       "x": 510,
       "y": 230,
       "factor": 0.24,
@@ -853,7 +857,7 @@
     {
       "id": "revelation",
       "kind": "light",
-      "sprite": "spirit",
+      "sprite": "forest_wisp",
       "x": 1248,
       "y": 600,
       "width": 512,

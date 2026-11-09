@@ -85,8 +85,11 @@ class ParallaxBackdrop extends Component {
           paint..color = Color.fromRGBO(255, 255, 255, alpha * .46),
         );
       } else {
+        final beamColor = assets.level.id == 'stage_03'
+            ? const Color(0xffa8d18d)
+            : const Color(0xffc89a5f);
         final ray = Paint()
-          ..color = Color.fromRGBO(198, 211, 255, alpha * .10)
+          ..color = beamColor.withAlpha((alpha * 26).round())
           ..isAntiAlias = false;
         for (var x = 80; x < 640; x += 112) {
           canvas.drawRect(Rect.fromLTWH(x.toDouble(), 0, 24, 360), ray);
@@ -148,13 +151,18 @@ class ParallaxBackdrop extends Component {
     // A deterministic dust field drifts at two speeds; points remain sparse
     // and subdued enough to preserve platform edges and the player's silhouette.
     final dustPaint = Paint()..isAntiAlias = false;
+    final dustColor = switch (assets.level.id) {
+      'stage_02' => const Color(0xffd5a66c),
+      'stage_03' => const Color(0xffa8cd86),
+      _ => const Color(0xff7fafb1),
+    };
     for (var i = 0; i < 26; i++) {
       final seed = i * 37.17;
       final speed = i.isEven ? 4.5 : 1.8;
       final x = ((seed + time * speed) % 672) - 16;
       final y = 40 + ((seed * 2.31 + math.sin(time * .22 + i) * 8) % 276);
       final alpha = (24 + 20 * (0.5 + 0.5 * math.sin(time * .6 + i))).round();
-      dustPaint.color = Color.fromARGB(alpha, 127, 175, 177);
+      dustPaint.color = dustColor.withAlpha(alpha);
       canvas.drawRect(
         Rect.fromLTWH(
           x.floorToDouble(),

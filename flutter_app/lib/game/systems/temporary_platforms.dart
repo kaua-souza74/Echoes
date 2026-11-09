@@ -14,18 +14,34 @@ class TemporaryPlatformState {
 }
 
 class TemporaryPlatforms {
-  TemporaryPlatforms(this.staticSolids, List<TemporaryPlatformSpec> specs)
-    : states = specs.map(TemporaryPlatformState.new).toList() {
+  TemporaryPlatforms(
+    this.staticSolids,
+    List<TemporaryPlatformSpec> specs, {
+    this.breakables = const [],
+  }) : states = specs.map(TemporaryPlatformState.new).toList() {
     _rebuild();
   }
   final List<Solid> staticSolids;
+  final List<BreakableSpec> breakables;
   final List<TemporaryPlatformState> states;
+  final Set<String> _destroyedBreakables = {};
   late List<Solid> collisionSolids;
+
   void _rebuild() {
     collisionSolids = [
       ...staticSolids,
       ...states.where((s) => s.active).map((s) => s.spec),
+      ...breakables.where((s) => !_destroyedBreakables.contains(s.id)),
     ];
+  }
+
+  bool destroyBreakable(String id) {
+    if (!breakables.any((spec) => spec.id == id) ||
+        !_destroyedBreakables.add(id)) {
+      return false;
+    }
+    _rebuild();
+    return true;
   }
 
   void tick(PlayerState body, double dt) {
@@ -72,6 +88,7 @@ class TemporaryPlatforms {
     for (final s in states) {
       s.reset();
     }
+    _destroyedBreakables.clear();
     _rebuild();
   }
 }

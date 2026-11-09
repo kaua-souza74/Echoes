@@ -40,9 +40,9 @@ Os fatores são proporções artísticas usados pelo jogo. Deixe o centro e as b
 
 O brilho é pré-composto em pequenos PNGs RGBA, com pulsos discretos em quadros separados. Use o núcleo e o halo com blend aditivo somente se o desempenho permitir; a leitura funciona também em composição alfa comum. Preserve contraste suficiente nas bordas de plataforma e não use ciano como único sinal de interação: o farol tem forma de obelisco e o Eco, forma cristalina.
 
-## Parallax futuro
+## Parallax da trilogia
 
-A fase 1 estabelece um arco quebrado, paredes com recortes e pilares com inscrições. A fase 2 pode trocar o arco por passarelas suspensas e névoa violeta; a fase 3 pode reaproveitar a grade e a lógica de camadas com vitrais assimétricos e acentos dourados. São direções futuras, não assets incluídos neste pacote.
+O Despertar estabelece o arco de pedra fria e luz ciano. Galerias Quebradas abre a composição em dunas, vãos de arenito e pontes antigas; Torre do Eco volta a subir, agora em torno de copas, raízes e janelas de pedra musgosa. As três regiões compartilham escala de pixel, silhuetas recortadas e contraste baixo no plano jogável, mas cada uma usa formas e cores próprias.
 
 ## Art Pass 2 — ambientes vivos
 
@@ -62,12 +62,18 @@ O Despertar agora usa seis imagens alinhadas em 640×360. Os quatro nomes origin
 
 As criaturas animadas usam fatores 0,17 (O Ouvinte) e 0,10 (mariposas), bob de ±2 px e opacidade entre 0,68 e 0,80. Os 26 pontos de poeira são determinísticos, oscilam lentamente e permanecem atrás das plataformas e do jogador. Os fatores iniciais evitam que o plano próximo corra mais rápido que a fase curta; ajustes devem ser avaliados durante uma travessia completa.
 
-**Galerias Quebradas:** azul-petróleo escuro, pontes em blocos interrompidos, pilastras verticais, correntes de ferro gasto e vãos de vento. O vazio deve ocupar área visual maior que a pedra; vida pequena e distante pode aparecer em aberturas, sem silhuetas sobre as plataformas.
+**Galerias Quebradas:** a travessia entra numa faixa de dunas que soterrou parte das galerias. Use carvão violeta no céu distante, areia ocre, arenito recortado pelo vento e âmbar desgastado. Preserve pontes interrompidas, pilastras verticais e correntes antigas para que a arquitetura siga contando a transmissão de saberes. O vazio permanece maior que a pedra; poeira e vida pequena ficam atrás da área de jogo.
 
-**Torre do Eco:** índigo, ciano prateado e ouro gasto pontual; torre central ascendente, lancetas altas e vidro quebrado confinado às bordas. O centro luminoso é reservado a eventos narrativos; evite grandes superfícies brancas atrás do personagem.
+**Torre do Eco:** a torre sobe entre copas e raízes de uma floresta verde profunda. Use sombras verde-musgo, pedra tomada por líquen, feixes suaves de luz e âmbar apenas no selo do Lume. Mantenha o eixo central ascendente e as janelas em lanceta; vinhas, folhas e sementes luminosas emolduram as bordas sem cobrir personagem ou plataformas. O centro claro continua reservado aos eventos narrativos.
 
-Os novos estudos usam o mesmo canvas e cores quantizadas do jogo, com massas por planos e detalhes em clusters de pixels. Eles são bases de composição reutilizáveis, não mapas finais nem promessa de fase implementada. O script `art_pipeline/scripts/generate_art_pass2.py` gera os assets desta etapa de forma determinística.
+As camadas atuais das Galerias e da Torre usam canvas 640×360 px, silhuetas por planos e detalhes em clusters de pixels. O script `art_pipeline/scripts/generate_biome_expansion.py` recompõe, de forma determinística, as camadas, os atlas e as criaturas dessas duas paletas.
+
+## Interface de jogo no celular
+
+O jogo ocupa a orientação horizontal em aparelhos nativos. O indicador de movimento fica sob o polegar esquerdo e se ancora onde o jogador toca; pulo e dash formam um par de botões no alcance do polegar direito. Os alvos são círculos grandes, com contorno e brilho ao pressionar. O botão de pausa fica no topo; a placa lateral usa a cor do capítulo e mantém a cena visível atrás dela.
+
+Na entrada, uma grade de pixels na cor local cobre a fase e se desfaz para revelar o cenário. Ao voltar ao menu, a mesma grade recompõe a cor e fecha a cena. A mudança de capítulos percorre ciano frio, ocre de areia e verde de floresta sem depender apenas da cor: cada etapa também troca silhuetas, arquitetura e vegetação.
 
 
-## V2.1 — direções aplicadas
-As Galerias e a Torre agora são mapas executáveis. Galerias usa vazios entre passarelas, metal rebitado, correntes remotas, vento e uma grande silhueta com membros pendentes atravessando o abismo. A Torre organiza a jornada em escadas alternadas e poços de lancetas, com pedra índigo/prata, vidro lateral, espíritos cristalinos e reação luminosa no final. Cada ambiente possui quatro layers próprias com deslocamento XY. Os tiles receberam lascas, fissuras e desgaste em clusters, mantendo o topo de apoio legível. O Errante e os props compartilhados preservam o contraste e a escala anteriores. As seções deste documento que tratam esses ambientes como estudos descrevem o estado histórico do Art Pass 2.
+## V2.1 — primeira integração (histórico visual)
+As Galerias e a Torre são mapas executáveis com quatro layers próprias e deslocamento XY. O arranjo de pontes quebradas e a torre vertical permanecem; a V2.2 substitui as paletas frias por arenito de deserto e floresta verde, com atlas, poeira e criaturas locais.

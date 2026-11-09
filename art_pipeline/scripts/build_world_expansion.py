@@ -40,8 +40,8 @@ for args in [('galleries_gate',912,1640,'O Reino Suspenso'),('galleries_wings',1
 for a in [('Entrada das Galerias',0,1792,0,2304),('Passagens Suspensas',1792,3296,0,2304),('Abismo das Correntes',3296,4080,1200,2304),('Câmara da Ruptura',3296,5696,0,1200),('A Última Travessia',5696,8448,0,2304)]:g.section(*a)
 g.story('g_entry',120,1792);g.story('g_wings',1568,1664);g.story('g_depth',3616,1792,90);g.story('g_rupture',4832,960)
 g.finish(8160,960,['galleries_rupture'],'g_exit')
-g.d['ambient_events']=[dict(id='colossus',kind='crossing',sprite='colossus',x=3296,y=800,width=700,height=1200,duration=28)]
-g.d['ambient_actors']=[dict(sprite='moth',x=130,y=100,factor=.12,opacity=.5),dict(sprite='crawler',x=490,y=220,factor=.32,opacity=.6)]
+g.d['ambient_events']=[dict(id='colossus',kind='crossing',sprite='sand_colossus',x=3296,y=800,width=700,height=1200,duration=28)]
+g.d['ambient_actors']=[dict(sprite='dust_moth',x=130,y=100,factor=.12,opacity=.54),dict(sprite='dune_crawler',x=490,y=220,factor=.32,opacity=.62)]
 g.d['layers']=[dict(asset='parallax/stage_02/'+n,parallax=f,parallax_y=fy) for n,f,fy in [('01_petroil_void.png',.035,.015),('02_suspended_galleries.png',.18,.07),('03_chains_and_windbreaks.png',.47,.14),('04_wind_haze.png',.68,.20)]]
 
 t=World('stage_03','Torre do Eco',2560,5632);t.d.update(spawn=[384,5376],checkpoint_fall_limit=640)
@@ -62,8 +62,8 @@ for a in [('tower_threshold',1296,5224,'O Limiar'),('tower_glass',2480,4392,'Vid
 for name,y0,y1 in [('Base da Torre',4481,5632),('Salão dos Fragmentos',2945,4481),('Escadaria Partida',2369,2945),('Câmara das Memórias',1537,2369),('O Último Eco',0,1537)]:t.section(name,0,2560,y0,y1)
 t.story('t_base',416,5376);t.story('t_fragments',1984,4480);t.story('t_guardians',1984,2944);t.story('t_memory',1088,2240)
 t.finish(1632,768,['tower_memory','tower_last'],'t_final')
-t.d['ambient_events']=[dict(id='revelation',kind='light',sprite='spirit',x=1248,y=600,width=512,height=300,duration=30)]
-t.d['ambient_actors']=[dict(sprite='spirit',x=170,y=115,factor=.08,opacity=.58),dict(sprite='spirit',x=510,y=230,factor=.24,opacity=.4)]
+t.d['ambient_events']=[dict(id='revelation',kind='light',sprite='forest_wisp',x=1248,y=600,width=512,height=300,duration=30)]
+t.d['ambient_actors']=[dict(sprite='forest_wisp',x=170,y=115,factor=.08,opacity=.62),dict(sprite='forest_wisp',x=510,y=230,factor=.24,opacity=.46)]
 t.d['layers']=[dict(asset='parallax/stage_03/'+n,parallax=f,parallax_y=fy) for n,f,fy in [('01_indigo_aperture.png',.025,.035),('02_echo_tower.png',.11,.12),('03_shattered_lancets.png',.32,.24),('04_silver_mist.png',.55,.34)]]
 write(APP/'assets/levels/stage_02.json',g.d);write(APP/'assets/levels/stage_03.json',t.d)
 
@@ -166,3 +166,8 @@ for name,w,h in [('crawler',80,40),('spirit',64,80),('colossus',320,144)]:
   sheet.alpha_composite(fr,(i*w,0))
  save(sheet,OUT/f'background_creatures/worlds/{name}.png')
 print('Worlds built:',[(w.d['id'],len(w.d['solids']),len(w.d['temporary_platforms']),len(w.d['props'])) for w in [g,t]])
+
+# Keep the authored map generator and the matching biome art in one repeatable
+# command. The biome pass replaces the earlier cool-color study layers/atlases.
+from generate_biome_expansion import main as generate_biome_expansion
+generate_biome_expansion()

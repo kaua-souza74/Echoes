@@ -53,11 +53,11 @@ Para regerar somente o Art Pass 2 (camadas, criaturas e estudos), rode:
 python art_pipeline/scripts/generate_art_pass2.py
 ```
 
-Esse script não modifica atlas, protagonista, props, tiles ou regras de fase. Os PNGs `stage_02_visual_study.png` e `stage_03_visual_study.png` são placas de revisão e não estão no bundle atual. As camadas futuras precisam de layout e ajuste de parallax quando suas fases forem produzidas.
+No Art Pass 2, esses PNGs eram apenas placas de revisão. A expansão V2.2 os substituiu por layers que já estão referenciadas nos mapas; rode o gerador de biomas depois dos scripts anteriores para recriar as paletas novas.
 
 ## Limitações conhecidas
 
-O slice ainda não tem estados `land`/interação, áudio, mapa completo ou inimigos ativos. Galerias Quebradas e Torre do Eco têm estudos de ambiente, sem fases jogáveis, tilesets ou layouts de gameplay. As animações de `jump` e `fall` do Errante continuam com dois quadros. A aparência depende da escala e da câmera do jogo.
+Galerias Quebradas e Torre do Eco já têm mapas jogáveis, atlas próprios, quatro camadas de parallax e criaturas atmosféricas. Ainda não há combate ou áudio. As animações de `jump` e `fall` do Errante continuam com dois quadros. A aparência depende da escala e da câmera do jogo.
 
 ## Verificação do Art Pass 2
 
@@ -68,10 +68,10 @@ O slice ainda não tem estados `land`/interação, áudio, mapa completo ou inim
 - `screenshots/art_pass2_web.jpg` é captura real do jogo após a integração.
 
 
-## V2.1 — integração de Galerias e Torre
-Os seis layers antes descritos como estudos agora são bases reais dos mapas 02/03. Cada mapa usa quatro layers próprias (640×360), incluindo a nova névoa. O JSON indica asset, parallax horizontal e `parallax_y`; o renderer faz espelhamento em ambos os eixos para cobrir a ascensão. As placas `*_visual_study.png` continuam somente para revisão, apesar de estarem na pasta registrada pelo bundle.
+## V2.1 — integração de Galerias e Torre (histórico)
+Os seis layers antes descritos como estudos agora são bases reais dos mapas 02/03. Cada mapa usa quatro layers próprias (640×360), incluindo as camadas atmosféricas. O JSON indica asset, parallax horizontal e `parallax_y`; o renderer faz espelhamento em ambos os eixos para cobrir a ascensão. As placas `*_visual_study.png` servem para revisão e para a arte de destaque no menu, mas não como layer jogável.
 
-Os novos atlas `stage_02_ruins_tiles.png` e `stage_03_ruins_tiles.png` têm 8×5 células de 32 px. Galerias usa placas rebitadas, diagonais estruturais e desgaste âmbar; Torre usa pedra estratificada, inscrições em losango e prata/ouro gasto. Nenhuma imagem define colisor. Partes finais de paredes são recortadas no renderer para respeitar o retângulo autorado.
+Os atlas `stage_02_ruins_tiles.png` e `stage_03_ruins_tiles.png` têm 8×5 células de 32 px. A identidade de cada atlas foi atualizada na expansão V2.2; as imagens continuam sem definir colisores. Partes finais de paredes são recortadas no renderer para respeitar o retângulo autorado.
 
 Recorte `crawler` em 4×80×40 a 3 FPS; `spirit` em 4×64×80 a 3 FPS; `colossus` em 4×320×144 a 2 FPS. Origem visual central no backdrop, transparência normal, sem colisão. O padrão 0/1/0/−1 repete intencionalmente a pose neutra nos quadros 0 e 2. Crawler e espírito têm bob ±2 px; a entidade gigante cruza a tela em 28 s somente após a zona do Abismo. A Torre ganha feixes durante a zona final por 30 s. Esses eventos são idempotentes por tentativa e resetam ao reiniciar.
 
@@ -79,3 +79,11 @@ Reprodução: execute `generate_echoes_assets.py`, `generate_art_pass2.py`, `bui
 
 
 Capturas de produção V2.1: `screenshots/v21_galleries_web.png` e `screenshots/v21_tower_web.png`; ambas conferidas no navegador. As capturas regionais `stage_02_*`/`stage_03_*` são do harness de testes e usam fonte Ahem.
+
+## V2.2 — controle móvel e identidade dos mundos
+
+No celular nativo, a tela de jogo pede orientação horizontal e restaura a orientação do sistema ao sair. TouchControls usa uma alavanca horizontal flutuante sob o polegar esquerdo; os botões circulares maiores de pulo e dash ficam juntos no canto direito. A alavanca aceita um ponteiro e cada botão mantém o próprio ID de toque, permitindo mover, pular e usar dash ao mesmo tempo. Em tela pequena na Web, os controles também aparecem sem forçar a orientação do navegador.
+
+O botão de pausa abre o painel lateral com continuar, reiniciar, selecionar capítulo e voltar ao menu. A entrada e a saída da fase usam uma grade de pixels na cor local do capítulo para cobrir ou revelar o jogo. A preferência de menos efeitos encurta a transição; a pausa obrigatória da entrada não invalida um speedrun.
+
+Galerias Quebradas mantém as pontes e a história de transmissão cultural, agora soterradas por areia e iluminadas em ocre. Torre do Eco conserva seu eixo vertical, retomado por raízes e uma floresta verde profunda. Poeira, criaturas e feixes usam a paleta de cada capítulo. O script generate_biome_expansion.py recompõe camadas, atlas e criaturas com Python padrão. O gerador antigo de mapas build_world_expansion.py também chama essa geração, mas conserva a dependência Pillow que já usava para atlas e folhas de criatura; para atualizar só as imagens, rode o script de biomas diretamente.

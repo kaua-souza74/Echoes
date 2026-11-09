@@ -2,7 +2,7 @@
   "schema": 2,
   "id": "stage_01",
   "title": "O Despertar",
-  "version": 2,
+  "version": 3,
   "width": 11776,
   "height": 1024,
   "spawn": [
@@ -366,6 +366,10 @@
       128,
       32
     ]
+  ],
+  "breakables": [
+    {"id": "stone_seal_01", "x": 744, "y": 192, "width": 48, "height": 64, "material": "memory_stone", "hits": 1},
+    {"id": "stone_seal_02", "x": 4416, "y": 256, "width": 48, "height": 64, "material": "memory_stone", "hits": 2}
   ],
   "props": [
     {

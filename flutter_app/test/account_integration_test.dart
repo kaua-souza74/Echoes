@@ -175,7 +175,7 @@ void main() {
     );
     expect(
       authRedirect(booting: false, authenticated: true, location: '/login'),
-      '/menu',
+      '/intro',
     );
     expect(
       authRedirect(booting: true, authenticated: false, location: '/splash'),

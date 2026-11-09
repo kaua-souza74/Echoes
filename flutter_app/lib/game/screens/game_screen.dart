@@ -1,8 +1,13 @@
+import 'dart:async';
+
 import 'package:flame/game.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../echoes_game.dart';
 import '../hud/hud_state.dart';
 import '../hud/touch_controls.dart';
+import '../hud/pixel_world_transition.dart';
 import '../../dialogue/dialogue_overlay.dart';
 import '../../app/models.dart' show formatTime;
 
@@ -12,10 +17,11 @@ class GameScreen extends StatefulWidget {
     this.onChooseStage,
     this.onNextStage,
     this.onRestart,
+    this.onExitToMenu,
     this.showTimer = false,
     super.key,
   });
-  final VoidCallback? onChooseStage, onNextStage;
+  final VoidCallback? onChooseStage, onNextStage, onExitToMenu;
   final VoidCallback? onRestart;
   final bool showTimer;
   final EchoesGame? game;
@@ -26,12 +32,71 @@ class GameScreen extends StatefulWidget {
 class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   late final EchoesGame game;
   final focus = FocusNode(debugLabel: 'Echoes gameplay');
+  bool _showEntrance = true, _entrancePlaying = false, _exitingToMenu = false;
+
+  bool get _isMobileNative =>
+      !kIsWeb &&
+      (defaultTargetPlatform == TargetPlatform.android ||
+          defaultTargetPlatform == TargetPlatform.iOS);
+
+  Color get _stageAccent => switch (game.stageId) {
+    'stage_02' => const Color(0xffd6a15d),
+    'stage_03' => const Color(0xff83bd82),
+    _ => const Color(0xff84d9e8),
+  };
+
+  Duration get _transitionDuration => game.reduceEffects
+      ? const Duration(milliseconds: 360)
+      : const Duration(milliseconds: 920);
+
   @override
   void initState() {
     super.initState();
     game = widget.game ?? EchoesGame();
     focus.addListener(_focusChanged);
     WidgetsBinding.instance.addObserver(this);
+    if (_isMobileNative) {
+      unawaited(
+        SystemChrome.setPreferredOrientations(const [
+          DeviceOrientation.landscapeLeft,
+          DeviceOrientation.landscapeRight,
+        ]),
+      );
+    }
+    unawaited(_revealAfterLoad());
+  }
+
+  Future<void> _revealAfterLoad() async {
+    try {
+      await game.loaded;
+    } catch (_) {
+      // Let GameWidget's error surface appear through the same entry curtain.
+    }
+    // `loaded` means the Flame tree is ready, but it does not guarantee that
+    // its first frame has reached the canvas. Keep the pixel curtain closed
+    // for two rendered Flutter frames so the reveal uncovers the live world.
+    await WidgetsBinding.instance.endOfFrame;
+    await WidgetsBinding.instance.endOfFrame;
+    if (!mounted) return;
+    if (game.readyToPlay) {
+      game.setPaused(true, invalidateSpeedrun: false);
+    }
+    await WidgetsBinding.instance.endOfFrame;
+    if (!mounted) return;
+    setState(() => _entrancePlaying = true);
+  }
+
+  void _finishEntrance() {
+    if (!mounted || !_showEntrance) return;
+    setState(() => _showEntrance = false);
+    if (game.readyToPlay) game.setPaused(false);
+    focus.requestFocus();
+  }
+
+  void _exitToMenu() {
+    if (_exitingToMenu || widget.onExitToMenu == null) return;
+    game.setPaused(true);
+    setState(() => _exitingToMenu = true);
   }
 
   @override
@@ -49,6 +114,9 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     focus.removeListener(_focusChanged);
     game.shutdown();
     focus.dispose();
+    if (_isMobileNative) {
+      unawaited(SystemChrome.setPreferredOrientations(const []));
+    }
     super.dispose();
   }
 
@@ -183,7 +251,12 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
                         animation: game.dialogue,
                         builder: (context, _) => game.dialogue.active
                             ? const SizedBox.shrink()
-                            : TouchControls(input: game.input),
+                            : TouchControls.shouldShowFor(context)
+                            ? TouchControls(
+                                input: game.input,
+                                accent: _stageAccent,
+                              )
+                            : const SizedBox.shrink(),
                       ),
                     ),
                     Align(
@@ -194,7 +267,9 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
                           child: Text(
                             state.message.isNotEmpty
                                 ? state.message
-                                : 'A/D ou ← → · Espaço: pulo · Shift: dash · R: retornar',
+                                : (TouchControls.shouldShowFor(context)
+                                      ? 'Polegar esquerdo: mover · direito: pular, dash e bater'
+                                      : 'A/D ou ← → · Espaço: pular · Shift: dash · F: bater · R: checkpoint'),
                             textAlign: TextAlign.center,
                             style: const TextStyle(
                               fontSize: 11,
@@ -221,6 +296,28 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
                   : const SizedBox.shrink(),
             ),
           ),
+          if (_showEntrance)
+            Positioned.fill(
+              child: PixelWorldTransition(
+                key: const ValueKey('enter-world'),
+                mode: PixelWorldTransitionMode.revealWorld,
+                color: _stageAccent,
+                duration: _transitionDuration,
+                playing: _entrancePlaying,
+                onCompleted: _finishEntrance,
+              ),
+            ),
+          if (_exitingToMenu)
+            Positioned.fill(
+              child: PixelWorldTransition(
+                key: const ValueKey('leave-world'),
+                mode: PixelWorldTransitionMode.coverWorld,
+                color: _stageAccent,
+                duration: _transitionDuration,
+                playing: true,
+                onCompleted: widget.onExitToMenu,
+              ),
+            ),
         ],
       ),
     ),
@@ -228,99 +325,126 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
 
   Widget _pauseCard(HudState state) => Positioned.fill(
     child: ColoredBox(
-      color: const Color(0xd9080e19),
-      child: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(20),
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 420),
-            child: Container(
-              padding: const EdgeInsets.all(28),
-              decoration: BoxDecoration(
-                color: const Color(0xff111d2b),
-                border: Border.all(color: const Color(0xff34495d)),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    state.completed ? Icons.auto_awesome : Icons.pause,
-                    color: const Color(0xff84d9e8),
-                    size: 30,
+      color: const Color(0xc9080e19),
+      child: SafeArea(
+        child: Align(
+          alignment:
+              MediaQuery.sizeOf(context).width >
+                  MediaQuery.sizeOf(context).height
+              ? Alignment.centerLeft
+              : Alignment.center,
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(18),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 390),
+              child: Container(
+                padding: const EdgeInsets.fromLTRB(24, 22, 24, 18),
+                decoration: BoxDecoration(
+                  color: const Color(0xf2111d2b),
+                  border: Border(
+                    left: BorderSide(color: _stageAccent, width: 3),
+                    top: const BorderSide(color: Color(0xff34495d)),
+                    right: const BorderSide(color: Color(0xff34495d)),
+                    bottom: const BorderSide(color: Color(0xff34495d)),
                   ),
-                  const SizedBox(height: 14),
-                  Text(
-                    state.completed ? game.art.level.title : 'Pausa',
-                    style: const TextStyle(
-                      fontSize: 26,
-                      fontWeight: FontWeight.w300,
+                  boxShadow: [
+                    BoxShadow(
+                      color: _stageAccent.withAlpha(28),
+                      blurRadius: 30,
+                      spreadRadius: 2,
                     ),
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    state.completed
-                        ? (game.speedrun
-                              ? '${formatTime(game.clock.durationMs)} · ${state.deaths} quedas\n${game.speedrunEligible ? 'Tempo enviado como não verificado. Aguarde a confirmação de salvamento.' : 'Tentativa invalidada por pausa ou perda de foco. Reinicie para registrar um recorde.'}'
-                              : 'A luz conhece este caminho.\n${state.echoes}/${state.totalEchoes} Ecos · Farol aceso\n${game.stageId == 'stage_03' ? 'Fim do primeiro arco · O nome ainda aguarda.' : 'O próximo capítulo aguarda.'}')
-                        : 'A/D ou setas: mover\nEspaço: pulo variável · Shift: dash\nEmpurre a parede para deslizar e pule para sair.\nR: voltar ao checkpoint',
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      height: 1.6,
-                      color: Color(0xffb0c3ca),
+                  ],
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(
+                      state.completed ? Icons.auto_awesome : Icons.pause,
+                      color: _stageAccent,
+                      size: 30,
                     ),
-                  ),
-                  const SizedBox(height: 22),
-                  FilledButton(
-                    onPressed: () {
-                      if (state.completed) {
-                        if (widget.onRestart != null) {
-                          widget.onRestart!();
-                        } else {
-                          game.restart();
-                        }
-                      } else {
-                        game.setPaused(false);
-                      }
-                      focus.requestFocus();
-                    },
-                    child: Text(
-                      state.completed ? 'Jogar novamente' : 'Continuar',
+                    const SizedBox(height: 14),
+                    Text(
+                      state.completed ? game.art.level.title : 'Pausa',
+                      style: const TextStyle(
+                        fontSize: 26,
+                        fontWeight: FontWeight.w300,
+                      ),
                     ),
-                  ),
-                  if (state.completed && widget.onNextStage != null)
-                    TextButton(
-                      onPressed: widget.onNextStage,
-                      child: const Text('Próximo capítulo'),
+                    const SizedBox(height: 10),
+                    Text(
+                      state.completed
+                          ? (game.speedrun
+                                ? '${formatTime(game.clock.durationMs)} · ${state.deaths} quedas\n${game.speedrunEligible ? 'Tempo enviado como não verificado. Aguarde a confirmação de salvamento.' : 'Tentativa invalidada por pausa ou perda de foco. Reinicie para registrar um recorde.'}'
+                                : 'A luz conhece este caminho.\n${state.echoes}/${state.totalEchoes} Ecos · Farol aceso\n${game.stageId == 'stage_03' ? 'Fim do primeiro arco · O nome ainda aguarda.' : 'O próximo capítulo aguarda.'}')
+                          : (TouchControls.shouldShowFor(context)
+                                ? 'Polegar esquerdo: mover\nPular, dash e bater: botões à direita\nBATER quebra as estruturas marcadas.'
+                                : 'A/D ou setas: mover\nEspaço: pulo variável · Shift: dash · F: bater\nBATER quebra estruturas marcadas.\nR: voltar ao checkpoint'),
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        height: 1.6,
+                        color: Color(0xffb0c3ca),
+                      ),
                     ),
-                  if (widget.onChooseStage != null)
-                    TextButton(
-                      onPressed: widget.onChooseStage,
-                      child: const Text('Selecionar capítulo'),
-                    ),
-                  if (!state.completed)
-                    TextButton(
+                    const SizedBox(height: 22),
+                    FilledButton(
                       onPressed: () {
-                        if (widget.onRestart != null) {
-                          widget.onRestart!();
+                        if (state.completed) {
+                          if (widget.onRestart != null) {
+                            widget.onRestart!();
+                          } else {
+                            game.restart();
+                          }
                         } else {
-                          game.restart();
+                          game.setPaused(false);
                         }
-                        focus.requestFocus();
-                      },
-                      child: const Text('Reiniciar trecho'),
-                    ),
-                  for (final id in game.dialogue.viewed)
-                    TextButton(
-                      onPressed: () {
-                        game.replayMemory(id);
                         focus.requestFocus();
                       },
                       child: Text(
-                        'Rever memória · ${game.dialogue.sequences[id]!.speaker}',
+                        state.completed ? 'Jogar novamente' : 'Continuar',
                       ),
                     ),
-                ],
+                    if (state.completed && widget.onNextStage != null)
+                      TextButton(
+                        onPressed: widget.onNextStage,
+                        child: const Text('Próximo capítulo'),
+                      ),
+                    if (widget.onChooseStage != null)
+                      TextButton(
+                        onPressed: widget.onChooseStage,
+                        child: const Text('Selecionar capítulo'),
+                      ),
+                    if (!state.completed)
+                      TextButton(
+                        onPressed: () {
+                          if (widget.onRestart != null) {
+                            widget.onRestart!();
+                          } else {
+                            game.restart();
+                          }
+                          focus.requestFocus();
+                        },
+                        child: const Text('Reiniciar trecho'),
+                      ),
+                    if (widget.onExitToMenu != null)
+                      TextButton.icon(
+                        onPressed: _exitToMenu,
+                        icon: const Icon(Icons.home_outlined),
+                        label: const Text('Voltar ao menu'),
+                      ),
+                    for (final id in game.dialogue.viewed)
+                      TextButton(
+                        onPressed: () {
+                          game.replayMemory(id);
+                          focus.requestFocus();
+                        },
+                        child: Text(
+                          'Rever memória · ${game.dialogue.sequences[id]!.speaker}',
+                        ),
+                      ),
+                  ],
+                ),
               ),
             ),
           ),

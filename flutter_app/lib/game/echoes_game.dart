@@ -9,6 +9,7 @@ import 'art/game_assets.dart';
 import 'camera/camera_controller.dart';
 import 'camera/parallax_backdrop.dart';
 import 'components/checkpoint.dart';
+import 'components/breakable_obstacle.dart';
 import 'components/echo_fragment.dart';
 import 'config/movement_config.dart';
 import 'effects/one_shot_effect.dart';
@@ -90,7 +91,8 @@ class EchoesGame extends FlameGame with KeyboardEvents {
   final List<CheckpointBeacon> beacons = [];
   bool readyToPlay = false, manuallyPaused = false;
   double _accumulator = 0, _dustTime = 0, _trailTime = 0, _messageTime = 4;
-  String _message = 'Colete o Eco e encontre o farol adiante.';
+  String _message = 'Bata nas estruturas rachadas para abrir caminho.';
+  final Map<String, BreakableObstacle> breakableViews = {};
 
   @override
   Color backgroundColor() => const Color(0xff080e19);
@@ -103,6 +105,7 @@ class EchoesGame extends FlameGame with KeyboardEvents {
     platforms = TemporaryPlatforms(
       art.level.solids,
       art.level.temporaryPlatforms,
+      breakables: art.level.breakables,
     );
     progress.reset(spawnX: art.level.spawnX, spawnY: art.level.spawnY);
     body.respawn(art.level.spawnX, art.level.spawnY);
@@ -123,6 +126,14 @@ class EchoesGame extends FlameGame with KeyboardEvents {
     await world.add(TemporaryPlatformView(art, platforms, rig));
     player = Errante(art);
     await world.add(player);
+    for (final spec in art.level.breakables) {
+      final obstacle = BreakableObstacle(
+        spec,
+        onDestroyed: () => platforms.destroyBreakable(spec.id),
+      );
+      breakableViews[spec.id] = obstacle;
+      await world.add(obstacle);
+    }
     for (final prop in art.level.props) {
       if (prop.type == 'echo') {
         final fragment = EchoFragment(art, x: prop.x, y: prop.y);
@@ -194,7 +205,9 @@ class EchoesGame extends FlameGame with KeyboardEvents {
   }
 
   void _simulate(double dt) {
-    movement.step(body, input.consume(), platforms.collisionSolids, dt);
+    final frame = input.consume();
+    movement.step(body, frame, platforms.collisionSolids, dt);
+    if (frame.attackPressed) _attackObstacles();
     platforms.tick(body, dt);
     for (final event in art.level.ambientEvents) {
       if (body.x >= event.x &&
@@ -297,6 +310,49 @@ class EchoesGame extends FlameGame with KeyboardEvents {
     rig.follow(body.x, body.y, body.facing, dt);
   }
 
+  void _attackObstacles() {
+    world.add(
+      AttackArc(
+        x: body.x + body.facing * 22,
+        y: body.y,
+        facing: body.facing,
+        accent: switch (stageId) {
+          'stage_02' => const Color(0xffe2b56e),
+          'stage_03' => const Color(0xffe8bd72),
+          _ => const Color(0xff84d9e8),
+        },
+      ),
+    );
+    final hitbox = Rect.fromLTRB(
+      body.facing > 0 ? body.right - 2 : body.left - 54,
+      body.top + 3,
+      body.facing > 0 ? body.right + 54 : body.left + 2,
+      body.y - 3,
+    );
+    final target =
+        breakableViews.values.where((obstacle) {
+          if (obstacle.destroyed) return false;
+          final rect = Rect.fromLTWH(
+            obstacle.spec.x,
+            obstacle.spec.y,
+            obstacle.spec.width,
+            obstacle.spec.height,
+          );
+          return hitbox.overlaps(rect);
+        }).toList()..sort(
+          (a, b) =>
+              (a.spec.x - body.x).abs().compareTo((b.spec.x - body.x).abs()),
+        );
+    if (target.isEmpty) return;
+    final obstacle = target.first;
+    obstacle.strike();
+    _say(
+      obstacle.destroyed
+          ? 'Estrutura desfeita · caminho aberto.'
+          : 'A estrutura rachou. Bata mais uma vez.',
+    );
+  }
+
   void _syncVisuals() {
     player.sync(body, movement.pose(body));
     // Viewfinder.position returns a derived vector; assign through its setter.
@@ -361,6 +417,9 @@ class EchoesGame extends FlameGame with KeyboardEvents {
     speedrunEligible = true;
     clock.reset();
     platforms.reset();
+    for (final obstacle in breakableViews.values) {
+      obstacle.restore();
+    }
     backdrop.resetEvents();
     dialogue.dismissImmediately();
     progress.reset(spawnX: art.level.spawnX, spawnY: art.level.spawnY);
@@ -380,12 +439,14 @@ class EchoesGame extends FlameGame with KeyboardEvents {
     _syncVisuals();
   }
 
-  void setPaused(bool value) {
+  void setPaused(bool value, {bool invalidateSpeedrun = true}) {
     if (!readyToPlay || progress.completed || dialogue.active) {
       return;
     }
     manuallyPaused = value;
-    if (speedrun && value && clock.hasStarted) speedrunEligible = false;
+    if (speedrun && value && invalidateSpeedrun && clock.hasStarted) {
+      speedrunEligible = false;
+    }
     if (value) clock.pause();
     input.clear();
     _accumulator = 0;
@@ -447,6 +508,7 @@ class EchoesGame extends FlameGame with KeyboardEvents {
       if (keysPressed.contains(LogicalKeyboardKey.shiftLeft) ||
           keysPressed.contains(LogicalKeyboardKey.shiftRight))
         InputAction.dash,
+      if (keysPressed.contains(LogicalKeyboardKey.keyF)) InputAction.attack,
     });
     return KeyEventResult.handled;
   }

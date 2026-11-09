@@ -21,6 +21,21 @@ class TemporaryPlatformSpec extends Solid {
   final double breakAfter, recoverAfter;
 }
 
+class BreakableSpec extends Solid {
+  const BreakableSpec(
+    super.x,
+    super.y,
+    super.width,
+    super.height, {
+    required super.id,
+    required this.material,
+    this.hits = 1,
+  });
+
+  final String material;
+  final int hits;
+}
+
 class AmbientActor {
   const AmbientActor(this.sprite, this.x, this.y, this.factor, this.opacity);
   final String sprite;
@@ -112,6 +127,7 @@ class LevelData {
     this.version = 1,
     this.tileAsset = 'tilesets/stage_01_ruins_tiles.png',
     this.temporaryPlatforms = const [],
+    this.breakables = const [],
     this.ambientEvents = const [],
     this.ambientActors = const [
       AmbientActor('listener', 318, 163, .17, .68),
@@ -134,6 +150,7 @@ class LevelData {
   final String id, title, tileAsset, finalSequence;
   final int version;
   final List<TemporaryPlatformSpec> temporaryPlatforms;
+  final List<BreakableSpec> breakables;
   final List<AmbientActor> ambientActors;
   final List<AmbientEvent> ambientEvents;
   final double checkpointFallLimit, lookAhead, followRate;
@@ -212,6 +229,19 @@ class LevelData {
               id: p['id'],
               breakAfter: number(p['break_after']),
               recoverAfter: number(p['recover_after']),
+            ),
+          )
+          .toList(),
+      breakables: (data['breakables'] as List? ?? [])
+          .map(
+            (p) => BreakableSpec(
+              number(p['x']),
+              number(p['y']),
+              number(p['width']),
+              number(p['height']),
+              id: p['id'],
+              material: p['material'],
+              hits: p['hits'] ?? 1,
             ),
           )
           .toList(),

@@ -5,7 +5,7 @@
 | Categoria | Evidência / limite |
 | --- | --- |
 | Implementado | Auth Supabase, rotas protegidas, menus, missões, perfil, conquistas, ranking PostgreSQL, preferências, memórias e integração dos eventos Flame. |
-| Testado localmente | Última suíte completa: 37 testes passaram. `flutter analyze --no-pub`: sem issues; após tornar a configuração padrão, `dart analyze` nos arquivos alterados também passou. `flutter run -d chrome` compilou e iniciou o app sem `--dart-define`. 19 verificações PostgreSQL com PGlite usando o SQL combinado. |
+| Testado localmente | Última suíte completa antes do prólogo: 37 testes passaram. Para o prólogo e guia, `dart analyze` nos arquivos alterados passou e `flutter build web --no-pub` concluiu. A suíte não foi repetida neste ajuste. 19 verificações PostgreSQL com PGlite usando o SQL combinado. |
 | Validado no Supabase remoto | O responsável aplicou o SQL. Auth respondeu HTTP 200; cadastro por e-mail está ligado e `mailer_autoconfirm=true`. REST retornou os dados seed de stages, collectibles, memory_entries, learning_checks e achievements. Leituras anônimas de tabelas privadas foram negadas como esperado. Cadastro/login e RPCs autenticadas ainda não foram testados com conta real. |
 | Pendente de aprovação | Nenhuma solicitação de ferramenta pendente. |
 | Pendente | Cadastro/login e RPCs autenticadas com contas reais; acesso administrativo do conector; build Windows exige suporte a links simbólicos no ambiente. |
@@ -41,6 +41,7 @@ PGlite executa PostgreSQL com auth.uid e duas identidades locais simuladas. Não
 - SQL: RLS cruzada, acesso anônimo, escrita indevida em pontos/conquistas, recompensas únicas, requisitos de conclusão, melhores tempos, empate, versões e ranking combinado.
 - Produto: navegação, missão/perfil/logout, conteúdo bloqueado no arquivo, resposta educativa e telas estreitas com texto ampliado.
 - Produção Web: /profile sem sessão redireciona a /login; validação de campos vazios em login/cadastro; capturas limpas em docs/screenshots/v22_*_web.jpg. Nenhuma conta enviada nesses testes. Nenhum erro/warning no console observado nessa inspeção.
+- Onboarding: cada login autenticado abre o prólogo do Lume; guia de navegação permanece no menu; ambos usam narração visual sem áudio e podem ser pulados.
 
 ## Builds
 

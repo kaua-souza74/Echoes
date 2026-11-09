@@ -44,10 +44,15 @@ class SplashScreen extends StatelessWidget {
           const SizedBox(height: 20),
           const Text('Toda voz deixa uma luz.'),
           const SizedBox(height: 28),
-          if (controller.startupError == null)
-            const CircularProgressIndicator(color: lume)
-          else ...[
-            Text(controller.startupError!, textAlign: TextAlign.center),
+          if (controller.booting) ...[
+            const LinearProgressIndicator(color: lume),
+            const SizedBox(height: 12),
+            const Text('Conectando ao Vale…'),
+          ] else ...[
+            Text(
+              controller.startupError ?? 'Não foi possível abrir o Vale.',
+              textAlign: TextAlign.center,
+            ),
             EchoButton('Tentar novamente', onPressed: controller.initialize),
           ],
         ],
@@ -109,7 +114,7 @@ class _AuthScreenState extends State<AuthScreen> {
       } else {
         await widget.controller.login(_email.text.trim(), _password.text);
       }
-      if (mounted) context.go('/menu');
+      if (mounted) context.go('/intro');
     } catch (error) {
       if (mounted) setState(() => _message = friendlyError(error));
     } finally {
@@ -429,100 +434,420 @@ class MenuScreen extends StatelessWidget {
       title: 'O Vale das Vozes',
       back: null,
       reduceEffects: p.settings.reduceEffects,
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            SyncNotice(controller),
-            const SizedBox(height: 10),
-            Text(
-              'Bem-vindo, ${p.nickname}.',
-              style: const TextStyle(fontSize: 30, fontWeight: FontWeight.w300),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final wide = constraints.maxWidth >= 720;
+          final sideWidth = constraints.maxWidth >= 1000 ? 420.0 : 360.0;
+          return Stack(
+            children: [
+              if (wide)
+                Positioned.fill(
+                  left: sideWidth,
+                  child: _FeaturedStage(
+                    stage: continuing,
+                    onOpen: () => context.go(
+                      continuing == null
+                          ? '/stages'
+                          : '/stages/${continuing.id}',
+                    ),
+                  ),
+                ),
+              Align(
+                alignment: wide ? Alignment.centerLeft : Alignment.topCenter,
+                child: SizedBox(
+                  width: wide ? sideWidth : constraints.maxWidth,
+                  height: constraints.maxHeight,
+                  child: Container(
+                    decoration: wide
+                        ? BoxDecoration(
+                            color: ink.withAlpha(226),
+                            border: const Border(
+                              right: BorderSide(color: stone),
+                            ),
+                          )
+                        : null,
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.all(24),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          SyncNotice(controller),
+                          const SizedBox(height: 10),
+                          Text(
+                            'Bem-vindo ao Vale.',
+                            style: const TextStyle(
+                              fontSize: 30,
+                              fontWeight: FontWeight.w300,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          const Text(
+                            'Sua jornada começa onde as memórias ainda brilham.',
+                          ),
+                          const SizedBox(height: 24),
+                          const _MenuSectionLabel('SEU PROGRESSO'),
+                          Wrap(
+                            spacing: 12,
+                            runSpacing: 12,
+                            children: [
+                              ProgressCard(
+                                label: 'Pontos',
+                                value: '${p.points}',
+                              ),
+                              ProgressCard(
+                                label: 'Ecos',
+                                value: '${p.echoes.length} / 21',
+                              ),
+                              ProgressCard(
+                                label: 'Capítulos',
+                                value:
+                                    '${p.stages.values.where((v) => v == 'completed').length} / 3',
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 22),
+                          const _MenuSectionLabel('JOGAR'),
+                          SizedBox(
+                            width: double.infinity,
+                            child: FilledButton.icon(
+                              style: FilledButton.styleFrom(
+                                backgroundColor: lume,
+                                foregroundColor: ink,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 18,
+                                  vertical: 13,
+                                ),
+                                shape: const RoundedRectangleBorder(),
+                              ),
+                              onPressed: () => context.go(
+                                continuing == null
+                                    ? '/stages'
+                                    : '/stages/${continuing.id}',
+                              ),
+                              icon: const Icon(Icons.play_arrow_rounded),
+                              label: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    continuing == null
+                                        ? 'Escolher capítulo'
+                                        : 'Continuar jornada',
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                  if (continuing != null)
+                                    Text(
+                                      'Capítulo ${continuing.order}: ${continuing.title}',
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(fontSize: 11),
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          SizedBox(
+                            width: double.infinity,
+                            child: OutlinedButton.icon(
+                              style: OutlinedButton.styleFrom(
+                                foregroundColor: lume,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 18,
+                                  vertical: 12,
+                                ),
+                                side: const BorderSide(color: stone),
+                                shape: const RoundedRectangleBorder(),
+                              ),
+                              onPressed: () => context.go('/stages'),
+                              icon: const Icon(Icons.map_outlined),
+                              label: const Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text('Jogar · escolher capítulo'),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 18),
+                          const _MenuSectionLabel('EXPLORAR'),
+                          _MenuActionGrid(
+                            width: wide ? sideWidth : constraints.maxWidth,
+                            actions: [
+                              _MenuAction(
+                                'Speedrun',
+                                Icons.timer_outlined,
+                                () => context.go('/speedrun'),
+                              ),
+                              _MenuAction(
+                                'Memórias',
+                                Icons.auto_stories,
+                                () => context.go('/memories'),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 15),
+                          const _MenuSectionLabel('PROGRESSO'),
+                          _MenuActionGrid(
+                            width: wide ? sideWidth : constraints.maxWidth,
+                            actions: [
+                              _MenuAction(
+                                'Classificação',
+                                Icons.leaderboard_outlined,
+                                () => context.go('/leaderboard'),
+                              ),
+                              _MenuAction(
+                                'Conquistas',
+                                Icons.auto_awesome,
+                                () => context.go('/achievements'),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 15),
+                          const _MenuSectionLabel('CONTA E AJUDA'),
+                          _MenuActionGrid(
+                            width: wide ? sideWidth : constraints.maxWidth,
+                            actions: [
+                              _MenuAction(
+                                'Guia de primeiros passos',
+                                Icons.help_outline,
+                                () => context.go('/guide'),
+                              ),
+                              _MenuAction(
+                                'Perfil',
+                                Icons.person_outline,
+                                () => context.go('/profile'),
+                              ),
+                              _MenuAction(
+                                'Configurações',
+                                Icons.settings_outlined,
+                                () => context.go('/settings'),
+                              ),
+                              _MenuAction(
+                                'Sair da conta',
+                                Icons.logout,
+                                () async {
+                                  try {
+                                    await controller.logout();
+                                  } catch (error) {
+                                    if (context.mounted) {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          content: Text(friendlyError(error)),
+                                        ),
+                                      );
+                                    }
+                                  }
+                                },
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _MenuSectionLabel extends StatelessWidget {
+  const _MenuSectionLabel(this.label);
+  final String label;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.only(bottom: 9),
+    child: Text(
+      label,
+      style: const TextStyle(
+        color: Color(0xff9eafb9),
+        fontSize: 10,
+        letterSpacing: 1.7,
+        fontWeight: FontWeight.w700,
+      ),
+    ),
+  );
+}
+
+class _MenuAction {
+  const _MenuAction(this.label, this.icon, this.onPressed);
+  final String label;
+  final IconData icon;
+  final VoidCallback onPressed;
+}
+
+class _MenuActionGrid extends StatelessWidget {
+  const _MenuActionGrid({required this.width, required this.actions});
+  final double width;
+  final List<_MenuAction> actions;
+
+  @override
+  Widget build(BuildContext context) {
+    final itemWidth = ((width - 48 - 10) / 2).clamp(132.0, 220.0).toDouble();
+    return Wrap(
+      spacing: 10,
+      runSpacing: 8,
+      children: [
+        for (final action in actions)
+          SizedBox(
+            width: itemWidth,
+            child: OutlinedButton.icon(
+              style: OutlinedButton.styleFrom(
+                foregroundColor: const Color(0xffd2dde4),
+                backgroundColor: const Color(0x99111d2b),
+                alignment: Alignment.centerLeft,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 12,
+                ),
+                minimumSize: const Size(0, 56),
+                side: const BorderSide(color: Color(0xff34495d)),
+                shape: const RoundedRectangleBorder(),
+              ),
+              onPressed: action.onPressed,
+              icon: Icon(action.icon, size: 17, color: lume),
+              label: Text(
+                action.label,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(fontSize: 12),
+              ),
             ),
-            const SizedBox(height: 8),
-            const Text(
-              'Cada fragmento recuperado devolve ao Vale uma parte de sua história.',
-            ),
-            const SizedBox(height: 24),
-            Wrap(
-              spacing: 12,
-              runSpacing: 12,
-              children: [
-                ProgressCard(label: 'Pontos', value: '${p.points}'),
-                ProgressCard(label: 'Ecos', value: '${p.echoes.length} / 21'),
-                ProgressCard(
-                  label: 'Capítulos',
-                  value:
-                      '${p.stages.values.where((v) => v == 'completed').length} / 3',
+          ),
+      ],
+    );
+  }
+}
+
+class _FeaturedStage extends StatefulWidget {
+  const _FeaturedStage({required this.stage, required this.onOpen});
+  final StageEntry? stage;
+  final VoidCallback onOpen;
+
+  @override
+  State<_FeaturedStage> createState() => _FeaturedStageState();
+}
+
+class _FeaturedStageState extends State<_FeaturedStage>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _motion = AnimationController(
+    vsync: this,
+    duration: const Duration(seconds: 22),
+  )..repeat(reverse: true);
+
+  @override
+  void dispose() {
+    _motion.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final stage = widget.stage;
+    final art = switch (stage?.id) {
+      'stage_02' => 'assets/images/parallax/stage_02/stage_02_visual_study.png',
+      'stage_03' => 'assets/images/parallax/stage_03/stage_03_visual_study.png',
+      _ =>
+        stage?.preview ??
+            'assets/images/parallax/stage_01/03_mid_architecture.png',
+    };
+    final accent = switch (stage?.id) {
+      'stage_02' => const Color(0xffd6a15d),
+      'stage_03' => const Color(0xff83bd82),
+      _ => lume,
+    };
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(14, 0, 20, 16),
+      child: ClipRect(
+        child: AnimatedBuilder(
+          animation: _motion,
+          builder: (context, _) => Stack(
+            fit: StackFit.expand,
+            children: [
+              Transform.scale(
+                scale: 1.015 + _motion.value * .035,
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 900),
+                  child: Image.asset(
+                    art,
+                    key: ValueKey(art),
+                    fit: BoxFit.cover,
+                    filterQuality: FilterQuality.none,
+                  ),
                 ),
-              ],
-            ),
-            const SizedBox(height: 22),
-            Wrap(
-              spacing: 14,
-              runSpacing: 4,
-              children: [
-                EchoButton(
-                  'Continuar',
-                  onPressed: continuing == null
-                      ? null
-                      : () => context.go('/stages/${continuing.id}'),
-                  icon: Icons.play_arrow,
+              ),
+              const DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Color(0x55080e19),
+                      Color(0x22080e19),
+                      Color(0xe6080e19),
+                    ],
+                  ),
                 ),
-                EchoButton(
-                  'Jogar',
-                  onPressed: () => context.go('/stages'),
-                  icon: Icons.map_outlined,
+              ),
+              Positioned(
+                left: 24,
+                top: 20,
+                child: Text(
+                  'A JORNADA CONTINUA',
+                  style: TextStyle(
+                    color: accent,
+                    fontSize: 11,
+                    letterSpacing: 2,
+                  ),
                 ),
-                EchoButton(
-                  'Speedrun',
-                  onPressed: () => context.go('/speedrun'),
-                  icon: Icons.timer_outlined,
+              ),
+              Positioned(
+                left: 24,
+                right: 24,
+                bottom: 20,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      stage?.category ?? 'Memória e identidade',
+                      style: TextStyle(color: accent, fontSize: 12),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      stage?.title ?? 'O Despertar',
+                      style: const TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.w300,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      stage?.description ??
+                          'Siga o Lume pelas ruínas e descubra como um objeto pode guardar parte de uma vida.',
+                      style: const TextStyle(
+                        color: Color(0xffd1d9d8),
+                        height: 1.45,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    EchoButton(
+                      stage == null ? 'Ver capítulos' : 'Entrar no capítulo',
+                      onPressed: widget.onOpen,
+                      icon: Icons.play_arrow_rounded,
+                    ),
+                  ],
                 ),
-                EchoButton(
-                  'Classificação',
-                  onPressed: () => context.go('/leaderboard'),
-                  icon: Icons.leaderboard_outlined,
-                ),
-                EchoButton(
-                  'Memórias do Reino',
-                  onPressed: () => context.go('/memories'),
-                  icon: Icons.auto_stories,
-                ),
-                EchoButton(
-                  'Conquistas',
-                  onPressed: () => context.go('/achievements'),
-                  icon: Icons.auto_awesome,
-                ),
-                EchoButton(
-                  'Perfil',
-                  onPressed: () => context.go('/profile'),
-                  icon: Icons.person_outline,
-                ),
-                EchoButton(
-                  'Configurações',
-                  onPressed: () => context.go('/settings'),
-                  icon: Icons.settings_outlined,
-                ),
-                EchoButton(
-                  'Sair da conta',
-                  onPressed: () async {
-                    try {
-                      await controller.logout();
-                    } catch (error) {
-                      if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(friendlyError(error))),
-                        );
-                      }
-                    }
-                  },
-                  icon: Icons.logout,
-                ),
-              ],
-            ),
-          ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -878,7 +1203,9 @@ class _RankingScreenState extends State<RankingScreen> {
   }
 
   void _reload() {
-    _rows = widget.controller.backend.leaderboard(_kind, _stage);
+    _rows = widget.controller.backend
+        .leaderboard(_kind, _stage)
+        .timeout(const Duration(seconds: 12));
   }
 
   @override

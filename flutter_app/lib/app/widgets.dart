@@ -10,7 +10,11 @@ const panel = Color(0xee111d2b);
 const stone = Color(0xff34495d);
 
 extension StagePresentation on StageEntry {
-  int get version => id == 'stage_01' ? 2 : 1;
+  int get version => switch (id) {
+    'stage_01' => 3,
+    'stage_02' || 'stage_03' => 2,
+    _ => 1,
+  };
   String get preview => switch (id) {
     'stage_02' => 'assets/images/parallax/stage_02/02_suspended_galleries.png',
     'stage_03' => 'assets/images/parallax/stage_03/02_echo_tower.png',
@@ -18,9 +22,9 @@ extension StagePresentation on StageEntry {
   };
   String get description => switch (id) {
     'stage_02' =>
-      'Atravesse pontes frágeis e descubra os saberes que passam de mão em mão.',
+      'Atravesse galerias antigas que emergem das dunas e descubra os saberes passados de mão em mão.',
     'stage_03' =>
-      'Suba entre as vozes do Vale e reúna as histórias que ninguém guarda sozinho.',
+      'Suba pela torre retomada por raízes e reúna as histórias que ninguém guarda sozinho.',
     _ =>
       'Siga o Lume pelas ruínas e descubra como um objeto pode guardar parte de uma vida.',
   };

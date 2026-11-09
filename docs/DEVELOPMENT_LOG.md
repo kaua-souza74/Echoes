@@ -134,3 +134,11 @@ Gerado `supabase/ECHOES_V2.2_FULL_SETUP.sql`, transação única com migration e
 A URL e a chave pública anon agora são padrões em `lib/app/supabase_config.dart`; `--dart-define` continua podendo sobrescrevê-las. Removida a mensagem que obrigava a passar `--dart-define-from-file`. `dart analyze` nos arquivos alterados terminou sem issues. `flutter run` chegou ao CLI mas esta máquina tinha três alvos (Windows, Chrome e Edge), então o Flutter pediu que um dispositivo fosse escolhido; `flutter run -d chrome` iniciou o app sem configuração extra do Supabase. Os flags de build também deixaram de depender do arquivo local ignorado.
 
 O dono confirmou a aplicação do SQL. Leituras públicas retornaram seed de `stages`, `collectibles`, `memory_entries`, `learning_checks` e `achievements`; acesso anônimo às tabelas privadas foi negado. Auth está com cadastro por e-mail ligado e confirmação automática. Ainda falta executar cadastro/login e RPCs autenticadas com uma conta real; o conector de administração permanece sem permissão.
+
+### 09/11/2026 — prólogo narrado e guia rápido
+
+O menu agora recebe o jogador como “viajante”. Cada login ou cadastro com sessão abre um prólogo; a restauração automática de uma sessão existente continua indo direto ao menu. O jogador pode pular o prólogo e abrir o Guia de primeiros passos pelo menu a qualquer momento. O guia explica navegação, capítulos, controles e memórias.
+
+O Lume narra por uma caixa de mensagem textual, sem áudio. Um `CustomPainter` em 2D transforma 112 partículas entre motivos luminosos usando dissolve e morph; o ajuste de reduzir efeitos deixa a imagem estática. Chamadas de restauração, login, catálogo inicial, início de fase e classificação têm limite de 12 segundos e terminam com uma opção de tentar novamente, sem loader infinito.
+
+`dart analyze` nos arquivos alterados não apontou problemas e `flutter build web --no-pub` concluiu. A suíte Flutter não foi repetida neste ajuste. Build manteve avisos não fatais do conjunto de CupertinoIcons e do dry run WASM.
